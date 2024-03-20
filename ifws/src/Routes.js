@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import Home from "./Dashboard";
+import Role from "./Role";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,12 +33,14 @@ function RoutesComponent() {
       <Routes>
         {/* Rute untuk halaman login */}
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-
+        <Route path="/logout" element={<Login onLogin={handleLogout} />} />
         {/* Rute untuk halaman home yang dilindungi */}
         <Route path="/home" element={<GuardedRoute element={<Home />} />} />
-
+        {/* Rute untuk halaman home yang dilindungi */}
+        <Route path="/role" element={<GuardedRoute element={<Role />} />} />
         {/* Redirect jika pengguna mencoba mengakses rute yang tidak valid */}
         <Route path="*" element={<Navigate to="/login" />} />
+        {/*<Route path="*" element={<Navigate to="/login" />} />*/}
       </Routes>
     </Router>
   );

@@ -22,7 +22,7 @@ const drawerItems = [
   { text: "Role", icon: <PermIdentityIcon />, path: "/role" },
   { text: "Menu", icon: <MenuIcon />, path: "/menu" },
   { text: "Akun", icon: <AccountBoxIcon />, path: "/akun" },
-  { text: "Logout", icon: <ExitToAppIcon />, path: "/login" }, // Tambahkan path untuk logout
+  { text: "Logout", icon: <ExitToAppIcon />, path: "/logout" }, // Tambahkan path untuk logout
 ];
 
 const useStyles = makeStyles((theme) => ({
