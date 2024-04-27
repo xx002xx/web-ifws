@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "datatables.net": "^2.0.2",
     "datatables.net-dt": "^2.0.2",
+    "date-fns": "^3.6.0",
     "jquery": "^3.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -8,6 +8,9 @@ import {
 import Login from "./Login";
 import Home from "./Dashboard";
 import Role from "./Role";
+import Panitia from "./Panitia";
+import Akun from "./Akun";
+import Semester from "./Semester";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,6 +41,15 @@ function RoutesComponent() {
         <Route path="/home" element={<GuardedRoute element={<Home />} />} />
         {/* Rute untuk halaman home yang dilindungi */}
         <Route path="/role" element={<GuardedRoute element={<Role />} />} />
+        <Route
+          path="/panitia"
+          element={<GuardedRoute element={<Panitia />} />}
+        />
+        <Route path="/akun" element={<GuardedRoute element={<Akun />} />} />
+        <Route
+          path="/semester"
+          element={<GuardedRoute element={<Semester />} />}
+        />
         {/* Redirect jika pengguna mencoba mengakses rute yang tidak valid */}
         <Route path="*" element={<Navigate to="/login" />} />
         {/*<Route path="*" element={<Navigate to="/login" />} />*/}

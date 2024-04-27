@@ -20,8 +20,9 @@ const drawerWidth = 240;
 const drawerItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/home" },
   { text: "Role", icon: <PermIdentityIcon />, path: "/role" },
-  { text: "Menu", icon: <MenuIcon />, path: "/menu" },
   { text: "Akun", icon: <AccountBoxIcon />, path: "/akun" },
+  { text: "Panitia", icon: <AccountBoxIcon />, path: "/panitia" },
+  { text: "Semester", icon: <MenuIcon />, path: "/semester" },
   { text: "Logout", icon: <ExitToAppIcon />, path: "/logout" }, // Tambahkan path untuk logout
 ];
 
