@@ -11,6 +11,7 @@ import Role from "./Role";
 import Panitia from "./Panitia";
 import Akun from "./Akun";
 import Semester from "./Semester";
+import Kegiatan from "./Kegiatan";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,6 +50,10 @@ function RoutesComponent() {
         <Route
           path="/semester"
           element={<GuardedRoute element={<Semester />} />}
+        />
+        <Route
+          path="/kegiatan"
+          element={<GuardedRoute element={<Kegiatan />} />}
         />
         {/* Redirect jika pengguna mencoba mengakses rute yang tidak valid */}
         <Route path="*" element={<Navigate to="/login" />} />

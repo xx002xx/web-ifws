@@ -23,6 +23,7 @@ const drawerItems = [
   { text: "Akun", icon: <AccountBoxIcon />, path: "/akun" },
   { text: "Panitia", icon: <AccountBoxIcon />, path: "/panitia" },
   { text: "Semester", icon: <MenuIcon />, path: "/semester" },
+  { text: "Kegiatan", icon: <MenuIcon />, path: "/kegiatan" },
   { text: "Logout", icon: <ExitToAppIcon />, path: "/logout" }, // Tambahkan path untuk logout
 ];
 
