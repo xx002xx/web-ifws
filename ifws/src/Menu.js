@@ -68,10 +68,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Role = () => {
+const Menu = () => {
   const classes = useStyles();
   const [nama, setNama] = useState("");
-  const [roles, setRoles] = useState([]);
+  const [menus, setMenus] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,7 +84,7 @@ const Role = () => {
     console.log(`Previous page: ${currentPage}`);
     try {
       const response = await fetch(
-        `${API_URL}/roles/data?limit=5&offset=${currentPage}&search=${searchTerm}`,
+        `${API_URL}/menu/data?limit=5&offset=${currentPage}&search=${searchTerm}`,
         {
           method: "GET",
           headers: {
@@ -93,10 +93,10 @@ const Role = () => {
         }
       );
       const data = await response.json();
-      setRoles(data.items);
+      setMenus(data.items);
       setTotalPages(data.totalPages); // Pastikan totalPages diatur dengan benar
     } catch (error) {
-      console.error("Error fetching roles:", error);
+      console.error("Error fetching menus:", error);
     }
   };
 
@@ -105,36 +105,36 @@ const Role = () => {
     setNama(namaPengguna || "");
   }, []);
 
-  const handleUpdate = (roleId, roleName) => {
+  const handleUpdate = (menuId, menuName) => {
     Swal.fire({
-      title: "Update Role",
+      title: "Update Menu",
       input: "text",
-      inputValue: roleName,
+      inputValue: menuName,
       showCancelButton: true,
       confirmButtonText: "Update",
       showLoaderOnConfirm: true,
-      preConfirm: async (newRoleName) => {
+      preConfirm: async (newMenuName) => {
         try {
-          const response = await fetch(`${API_URL}/roles/${roleId}`, {
+          const response = await fetch(`${API_URL}/menu/${menuId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${API_TOKEN}`,
             },
-            body: JSON.stringify({ namaRole: newRoleName }),
+            body: JSON.stringify({ nm_menu: newMenuName }),
           });
 
           if (response.ok) {
-            const updatedRoles = roles.map((role) => {
-              if (role.id_role === roleId) {
-                return { ...role, nm_role: newRoleName };
+            const updatedMenus = menus.map((menu) => {
+              if (menu.id_menu === menuId) {
+                return { ...menu, nm_menu: newMenuName };
               }
-              return role;
+              return menu;
             });
-            setRoles(updatedRoles);
-            Swal.fire("Success", "Role updated successfully!", "success");
+            setMenus(updatedMenus);
+            Swal.fire("Success", "Menu updated successfully!", "success");
           } else {
-            throw new Error("Failed to update role");
+            throw new Error("Failed to update menu");
           }
         } catch (error) {
           Swal.showValidationMessage(`Request failed: ${error}`);
@@ -144,9 +144,9 @@ const Role = () => {
     });
   };
 
-  const handleDelete = async (roleId) => {
+  const handleDelete = async (menuId) => {
     try {
-      const response = await fetch(`${API_URL}/roles/delete/${roleId}`, {
+      const response = await fetch(`${API_URL}/menu/delete/${menuId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${API_TOKEN}`,
@@ -154,46 +154,46 @@ const Role = () => {
       });
 
       if (response.ok) {
-        const updatedRoles = roles.filter((role) => role.id_role !== roleId);
-        setRoles(updatedRoles);
+        const updatedMenus = menus.filter((menu) => menu.id_menu !== menuId);
+        setMenus(updatedMenus);
         Swal.fire({
           icon: "success",
           title: "Success",
-          text: "Role has been deleted successfully!",
+          text: "Menu has been deleted successfully!",
         });
       } else {
-        console.error("Failed to delete role");
+        console.error("Failed to delete menu");
       }
     } catch (error) {
-      console.error("Error deleting role:", error);
+      console.error("Error deleting menu:", error);
     }
   };
 
   const handleAdd = async () => {
-    const { value: namaRole } = await Swal.fire({
-      title: "Tambah Role",
+    const { value: menuName } = await Swal.fire({
+      title: "Tambah Menu",
       input: "text",
-      inputLabel: "Nama Role",
+      inputLabel: "Nama Menu",
       showCancelButton: true,
       confirmButtonText: "Tambah",
       showLoaderOnConfirm: true,
-      preConfirm: async (namaRole) => {
+      preConfirm: async (menuName) => {
         try {
-          const response = await fetch(`${API_URL}/roles`, {
+          const response = await fetch(`${API_URL}/menu`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${API_TOKEN}`,
             },
-            body: JSON.stringify({ namaRole: namaRole }),
+            body: JSON.stringify({ nm_menu: menuName }),
           });
 
           if (!response.ok) {
-            throw new Error("Gagal menambahkan role");
+            throw new Error("Gagal menambahkan menu");
           }
 
-          // Return the namaRole so it can be used below
-          return namaRole;
+          // Return the menuName so it can be used below
+          return menuName;
         } catch (error) {
           Swal.showValidationMessage(`Request failed: ${error}`);
         }
@@ -201,9 +201,9 @@ const Role = () => {
       allowOutsideClick: () => !Swal.isLoading(),
     });
 
-    // If namaRole is truthy (i.e., not null or undefined), reload data
-    if (namaRole) {
-      fetchData(); // Call fetchData function to update the roles data
+    // If menuName is truthy (i.e., not null or undefined), reload data
+    if (menuName) {
+      fetchData(); // Call fetchData function to update the menus data
     }
   };
 
@@ -221,32 +221,28 @@ const Role = () => {
         <Card className={classes.card}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Data Role
+              Data Menu
             </Typography>
             <Box className={classes.searchField}>
               {" "}
               {/* Menggunakan Box untuk memastikan TextField berada dalam satu baris */}
               <TextField
-                label="Cari Role"
+                label="Cari Menu"
                 variant="outlined"
                 size="small"
                 onChange={handleSearch}
                 fullWidth
               />
             </Box>
-            <IconButton
-              className={classes.addButton}
-              color="primary"
-              onClick={handleAdd}
-            >
-              <AddIcon /> Tambah Role
-            </IconButton>
 
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.tableHeader}>
-                    Nama Role
+                    Nama Menu
+                  </TableCell>
+                  <TableCell className={classes.tableHeader}>
+                    Path URL
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Action
@@ -254,26 +250,19 @@ const Role = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {roles.map((role) => (
-                  <TableRow key={role.id_role} className={classes.tableRow}>
-                    <TableCell>{role.nm_role}</TableCell>
+                {menus.map((menu) => (
+                  <TableRow key={menu.id_menu} className={classes.tableRow}>
+                    <TableCell>{menu.nm_menu}</TableCell>
+                    <TableCell>{menu.url_menu}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
                         <IconButton
                           color="primary"
                           onClick={() =>
-                            handleUpdate(role.id_role, role.nm_role)
+                            handleUpdate(menu.id_menu, menu.nm_menu)
                           }
                         >
                           <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDelete(role.id_role)}
-                        >
-                          <DeleteIcon />
                         </IconButton>
                       </Tooltip>
                     </TableCell>
@@ -297,12 +286,12 @@ const Role = () => {
 
 const theme = createTheme();
 
-const RoleComponent = () => {
+const menuComponent = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Role />
+      <Menu />
     </ThemeProvider>
   );
 };
 
-export default RoleComponent;
+export default menuComponent;

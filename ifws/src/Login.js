@@ -57,7 +57,9 @@ const Login = ({ onLogin }) => {
         localStorage.setItem("username", data.username);
         localStorage.setItem("nama", data.nama);
 
+        // Panggil onLogin untuk memperbarui status isLoggedIn
         onLogin();
+        // Arahkan pengguna ke halaman home setelah login berhasil
         navigate("/home");
       })
       .catch((error) => {

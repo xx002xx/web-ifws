@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,6 +12,9 @@ import Panitia from "./Panitia";
 import Akun from "./Akun";
 import Semester from "./Semester";
 import Kegiatan from "./Kegiatan";
+import Kegiatansekre from "./Kegiatansekre";
+import Menu from "./Menu";
+import Detailpanitia from "./Detailpanitia";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,6 +30,16 @@ function RoutesComponent() {
     localStorage.clear();
   };
 
+  // Memeriksa status autentikasi saat aplikasi dimuat ulang
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   // GuardedRoute untuk memeriksa apakah pengguna sudah login sebelum mengakses rute tertentu
   const GuardedRoute = ({ element, ...props }) => {
     return isLoggedIn ? element : <Navigate to="/login" />;
@@ -38,9 +51,15 @@ function RoutesComponent() {
         {/* Rute untuk halaman login */}
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/logout" element={<Login onLogin={handleLogout} />} />
-        {/* Rute untuk halaman home yang dilindungi */}
+        {/* Rute untuk halaman yang hanya bisa diakses ketika belum login */}
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? <Navigate to="/home" /> : <Navigate to="/login" />
+          }
+        />
+        {/* Rute untuk halaman yang hanya bisa diakses ketika sudah login */}
         <Route path="/home" element={<GuardedRoute element={<Home />} />} />
-        {/* Rute untuk halaman home yang dilindungi */}
         <Route path="/role" element={<GuardedRoute element={<Role />} />} />
         <Route
           path="/panitia"
@@ -51,13 +70,19 @@ function RoutesComponent() {
           path="/semester"
           element={<GuardedRoute element={<Semester />} />}
         />
+        <Route path="/menu" element={<GuardedRoute element={<Menu />} />} />
         <Route
           path="/kegiatan"
           element={<GuardedRoute element={<Kegiatan />} />}
         />
-        {/* Redirect jika pengguna mencoba mengakses rute yang tidak valid */}
-        <Route path="*" element={<Navigate to="/login" />} />
-        {/*<Route path="*" element={<Navigate to="/login" />} />*/}
+        <Route
+          path="/kegiatansekre"
+          element={<GuardedRoute element={<Kegiatansekre />} />}
+        />
+        <Route
+          path="/detailpanitia"
+          element={<GuardedRoute element={<Detailpanitia />} />}
+        />
       </Routes>
     </Router>
   );
