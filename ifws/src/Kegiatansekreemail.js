@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Kegiatansekre = () => {
+const Kegiatansekreemail = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [nama, setNama] = useState("");
@@ -330,6 +330,95 @@ const Kegiatansekre = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handlePesertalist = (
+    id_kegiatan,
+    id_semester,
+    judul_topik,
+    link_webinar,
+    tanggal_kegiatan,
+    waktu_mulai,
+    waktu_selesai
+  ) => {
+    localStorage.setItem(
+      "panitiaData",
+      JSON.stringify({
+        id_kegiatan,
+        id_semester,
+        judul_topik,
+        link_webinar,
+        tanggal_kegiatan,
+        waktu_mulai,
+        waktu_selesai,
+      })
+    );
+    navigate("/detailpesertalist");
+    // Implementasi fungsi handlePesertalist di sini
+    // Fungsi ini belum diimplementasikan, tambahkan logika sesuai kebutuhan
+  };
+
+  const handlegenerate = async (id_kegiatan) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/kegiatan/laporan/pdf/${id_kegiatan}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil laporan PDF");
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Laporan PDF berhasil diambil!",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: `Terjadi kesalahan: ${error.message}`,
+      });
+    }
+  };
+
+  const handleKirimEmail = async (id_kegiatan) => {
+    Swal.showLoading({
+      title: "Sedang Mengirim...",
+    }); // Menampilkan loader
+    try {
+      const response = await fetch(
+        `${API_URL}/kegiatan/kirimemail/${id_kegiatan}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: "Email berhasil dikirim!",
+        });
+      } else {
+        throw new Error("Gagal mengirim email");
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: `Terjadi kesalahan: ${error.message}`,
+      });
+    }
+  };
+
   const renderModalContent = () => {
     return (
       <Dialog open={openModal} onClose={handleCloseModal}>
@@ -486,15 +575,26 @@ const Kegiatansekre = () => {
                   <TableCell align="center" className={classes.tableHeader}>
                     Waktu Selesai
                   </TableCell>
+                  {localStorage.getItem("nm_role") === "Kesekretariatan" && (
+                    <>
+                      <TableCell align="center" className={classes.tableHeader}>
+                        Peserta
+                      </TableCell>
+                    </>
+                  )}
                   <TableCell align="center" className={classes.tableHeader}>
-                    Panitia
+                    Kehadiran
                   </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Peserta
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Action
-                  </TableCell>
+                  {localStorage.getItem("nm_role") === "Kesekretariatan" && (
+                    <>
+                      <TableCell align="center" className={classes.tableHeader}>
+                        Generate
+                      </TableCell>
+                      <TableCell align="center" className={classes.tableHeader}>
+                        Kirim
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -524,36 +624,42 @@ const Kegiatansekre = () => {
                       <TableCell align="center">
                         {dataKegiatan.waktu_selesai}
                       </TableCell>
-                      <TableCell align="center">
-                        <Tooltip title="Panitia">
-                          <IconButton
-                            color="primary"
-                            onClick={() =>
-                              handlePanitia(
-                                dataKegiatan.id_kegiatan,
-                                dataKegiatan.id_semester,
-                                dataKegiatan.judul_topik,
-                                dataKegiatan.link_webinar,
-                                dataKegiatan.tanggal_kegiatan
-                                  ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
-                                    ).toLocaleDateString("en-CA")
-                                  : "",
-                                dataKegiatan.waktu_mulai,
-                                dataKegiatan.waktu_selesai
-                              )
-                            }
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
+                      {localStorage.getItem("nm_role") ===
+                        "Kesekretariatan" && (
+                        <>
+                          <TableCell align="center">
+                            <Tooltip title="Panitia">
+                              <IconButton
+                                color="primary"
+                                onClick={() =>
+                                  handlePeserta(
+                                    dataKegiatan.id_kegiatan,
+                                    dataKegiatan.id_semester,
+                                    dataKegiatan.judul_topik,
+                                    dataKegiatan.link_webinar,
+                                    dataKegiatan.tanggal_kegiatan
+                                      ? new Date(
+                                          dataKegiatan.tanggal_kegiatan
+                                        ).toLocaleDateString("en-CA")
+                                      : "",
+                                    dataKegiatan.waktu_mulai,
+                                    dataKegiatan.waktu_selesai
+                                  )
+                                }
+                                style={{ fontSize: 12 }}
+                              >
+                                Upload
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </>
+                      )}
                       <TableCell align="center">
                         <Tooltip title="Peserta">
                           <IconButton
                             color="primary"
                             onClick={() =>
-                              handlePeserta(
+                              handlePesertalist(
                                 dataKegiatan.id_kegiatan,
                                 dataKegiatan.id_semester,
                                 dataKegiatan.judul_topik,
@@ -567,45 +673,43 @@ const Kegiatansekre = () => {
                                 dataKegiatan.waktu_selesai
                               )
                             }
+                            style={{ fontSize: 12 }} // Set font size to 12
                           >
-                            <EditIcon />
+                            Lihat
                           </IconButton>
                         </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <Tooltip title="Edit">
-                          <IconButton
-                            color="primary"
-                            onClick={() =>
-                              handleUpdate(
-                                dataKegiatan.id_kegiatan,
-                                dataKegiatan.id_semester,
-                                dataKegiatan.judul_topik,
-                                dataKegiatan.link_webinar,
-                                dataKegiatan.tanggal_kegiatan
-                                  ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
-                                    ).toLocaleDateString("en-CA")
-                                  : "",
-                                dataKegiatan.waktu_mulai,
-                                dataKegiatan.waktu_selesai
-                              )
-                            }
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                          <IconButton
-                            color="error"
-                            onClick={() =>
-                              handleDelete(dataKegiatan.id_kegiatan)
-                            }
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
+                      {localStorage.getItem("nm_role") ===
+                        "Kesekretariatan" && (
+                        <>
+                          <TableCell align="center">
+                            <Tooltip title="Generate">
+                              <IconButton
+                                color="primary"
+                                onClick={() =>
+                                  handlegenerate(dataKegiatan.id_kegiatan)
+                                }
+                                style={{ fontSize: 12 }} // Set font size to 12
+                              >
+                                Generate
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Tooltip title="Kirim Email">
+                              <IconButton
+                                color="error"
+                                onClick={() =>
+                                  handleKirimEmail(dataKegiatan.id_kegiatan)
+                                }
+                                style={{ fontSize: 12 }} // Set font size to 12
+                              >
+                                Kirim
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   ))
                 ) : (
@@ -632,12 +736,12 @@ const Kegiatansekre = () => {
 
 const theme = createTheme();
 
-const kegiatansekreComponent = () => {
+const KegiatansekreemailComponent = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Kegiatansekre />
+      <Kegiatansekreemail />
     </ThemeProvider>
   );
 };
 
-export default kegiatansekreComponent;
+export default KegiatansekreemailComponent;

@@ -107,9 +107,7 @@ const Akun = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `${API_URL}/akun/data?limit=5&offset=${
-          (currentPage - 1) * 5
-        }&search=${searchTerm}`,
+        `${API_URL}/akun/data?limit=5&page=${currentPage}&search=${searchTerm}`,
         {
           method: "GET",
           headers: {

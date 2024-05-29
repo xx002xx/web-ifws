@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { API_URL, API_TOKEN } from "./GlobalVariables";
 import { makeStyles } from "@mui/styles";
 import {
   Drawer,
@@ -8,26 +9,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { useNavigate } from "react-router-dom"; // Import useNavigate untuk navigasi
+import { useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu"; // Import semua ikon yang diperlukan
 
 const drawerWidth = 240;
-
-const drawerItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, path: "/home" },
-  { text: "Menu", icon: <MenuIcon />, path: "/menu" },
-  { text: "Role", icon: <PermIdentityIcon />, path: "/role" },
-  { text: "Akun", icon: <AccountBoxIcon />, path: "/akun" },
-  { text: "Panitia", icon: <AccountBoxIcon />, path: "/panitia" },
-  { text: "Semester", icon: <MenuIcon />, path: "/semester" },
-  { text: "Kegiatan", icon: <MenuIcon />, path: "/kegiatan" },
-  { text: "Kegiatan Sekre", icon: <MenuIcon />, path: "/kegiatansekre" },
-  { text: "Logout", icon: <ExitToAppIcon />, path: "/logout" }, // Tambahkan path untuk logout
-];
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -48,15 +33,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sidebar = () => {
+  const [drawerItems, setDrawerItems] = useState([]);
   const classes = useStyles();
-  const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi
+  const navigate = useNavigate();
 
-  // Fungsi untuk menangani logout
-  const handleLogout = () => {
-    // Lakukan logout di sini
-    localStorage.clear(); // Membersihkan storage
-    navigate("/login"); // Navigasi ke halaman login setelah logout
-  };
+  useEffect(() => {
+    const fetchMenuData = async () => {
+      const roleId = localStorage.getItem("roleId"); // Mengambil roleId dari localStorage
+      const response = await fetch(`${API_URL}/menu/dataakses/${roleId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      });
+      const data = await response.json();
+      const menuItems = data.map((item) => ({
+        text: item.nm_menu,
+        icon: <MenuIcon />, // Sesuaikan ikon berdasarkan item.id_menu atau kondisi lain
+        path: `/${item.url_menu}`,
+      }));
+      setDrawerItems(menuItems);
+    };
+
+    fetchMenuData();
+  }, []);
 
   return (
     <Drawer
@@ -72,17 +72,7 @@ const Sidebar = () => {
       </Typography>
       <List>
         {drawerItems.map((item, index) => (
-          <ListItem
-            button
-            key={item.text}
-            onClick={() => {
-              if (item.text === "Logout") {
-                handleLogout(); // Panggil handleLogout saat logout diklik
-              } else {
-                navigate(item.path); // Navigasi ke path yang ditentukan saat item selain Logout diklik
-              }
-            }}
-          >
+          <ListItem button key={item.text} onClick={() => navigate(item.path)}>
             <ListItemIcon style={{ color: "#ffffff" }}>
               {item.icon}
             </ListItemIcon>

@@ -97,6 +97,12 @@ const Panitia = () => {
   const [isAddMode, setIsAddMode] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [openAkunModal, setOpenAkunModal] = useState(false);
+  const [akunData, setAkunData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   useEffect(() => {
     fetchData();
@@ -106,9 +112,7 @@ const Panitia = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `${API_URL}/panitia/data?limit=5&offset=${
-          (currentPage - 1) * 5
-        }&search=${searchTerm}`,
+        `${API_URL}/panitia/data?limit=5&page=${currentPage}&search=${searchTerm}`,
         {
           method: "GET",
           headers: {
@@ -265,6 +269,57 @@ const Panitia = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleOpenAkunModal = (idPanitia, namaPanitia, idRole) => {
+    setAkunData({
+      id_panitia: idPanitia,
+      nama_panitia: namaPanitia,
+      id_role: idRole,
+    });
+    setOpenAkunModal(true);
+  };
+
+  const handleCloseAkunModal = () => {
+    setOpenAkunModal(false);
+    setAkunData({
+      username: "",
+      email: "",
+      password: "",
+    });
+  };
+
+  const handleAkunFormChange = (event) => {
+    setAkunData({
+      ...akunData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleBuatAkun = async () => {
+    try {
+      const response = await fetch(`${API_URL}/akun`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+        body: JSON.stringify(akunData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal membuat akun");
+      }
+
+      handleCloseAkunModal();
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Akun has been created successfully!",
+      });
+    } catch (error) {
+      Swal.showValidationMessage(`Request failed: ${error}`);
+    }
+  };
+
   const renderModalContent = () => {
     return (
       <Dialog open={openModal} onClose={handleCloseModal}>
@@ -282,16 +337,7 @@ const Panitia = () => {
             fullWidth
             className={classes.formInput} // Apply form input styling
           />
-          <TextField
-            name="rate_panitia"
-            label="Rate Panitia"
-            variant="outlined"
-            size="small"
-            value={formData.rate_panitia}
-            onChange={handleFormChange}
-            fullWidth
-            className={classes.formInput} // Apply form input styling
-          />
+
           <Select
             name="id_role"
             label="ID Role"
@@ -320,6 +366,64 @@ const Panitia = () => {
           </Button>
           <Button
             onClick={handleCloseModal}
+            color="primary"
+            className={classes.formInput}
+          >
+            Batal
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  const renderAkunModalContent = () => {
+    return (
+      <Dialog open={openAkunModal} onClose={handleCloseAkunModal}>
+        <DialogTitle>Buat Akun</DialogTitle>
+        <DialogContent>
+          <TextField
+            name="username"
+            label="Username"
+            variant="outlined"
+            size="small"
+            value={akunData.username}
+            onChange={handleAkunFormChange}
+            fullWidth
+            className={classes.formInput}
+          />
+          <TextField
+            name="email"
+            label="Email"
+            variant="outlined"
+            size="small"
+            value={akunData.email}
+            onChange={handleAkunFormChange}
+            fullWidth
+            className={classes.formInput}
+          />
+          <TextField
+            name="password"
+            label="Password"
+            type="password"
+            variant="outlined"
+            size="small"
+            value={akunData.password}
+            onChange={handleAkunFormChange}
+            fullWidth
+            className={classes.formInput}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleBuatAkun}
+            color="primary"
+            variant="contained"
+            className={classes.formInput}
+          >
+            Buat Akun
+          </Button>
+          <Button
+            onClick={handleCloseAkunModal}
             color="primary"
             className={classes.formInput}
           >
@@ -367,9 +471,6 @@ const Panitia = () => {
                     Nama Panitia
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
-                    Rate Panitia
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
                     Role
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -384,12 +485,7 @@ const Panitia = () => {
                     className={classes.tableRow}
                   >
                     <TableCell>{panitia.nama_panitia}</TableCell>
-                    <TableCell align="right">
-                      {" "}
-                      {new Intl.NumberFormat("id-ID").format(
-                        panitia.rate_panitia
-                      )}
-                    </TableCell>
+
                     <TableCell align="center">{panitia.nm_role}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
@@ -405,6 +501,20 @@ const Panitia = () => {
                           }
                         >
                           <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Akun">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleOpenAkunModal(
+                              panitia.id_panitia,
+                              panitia.nama_panitia,
+                              panitia.id_role
+                            )
+                          }
+                        >
+                          buat akun <AddIcon />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Delete">
@@ -431,6 +541,7 @@ const Panitia = () => {
         </Card>
       </Box>
       {renderModalContent()}
+      {renderAkunModalContent()}
     </div>
   );
 };

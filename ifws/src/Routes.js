@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./Login";
+import Login from "./Login"; // Perbaikan casing untuk menghindari masalah lint
 import Home from "./Dashboard";
 import Role from "./Role";
 import Panitia from "./Panitia";
@@ -13,8 +13,18 @@ import Akun from "./Akun";
 import Semester from "./Semester";
 import Kegiatan from "./Kegiatan";
 import Kegiatansekre from "./Kegiatansekre";
+import Kegiatanben from "./Kegiatanben";
 import Menu from "./Menu";
 import Detailpanitia from "./Detailpanitia";
+import Detailpanitiaben from "./Detailpanitiaben";
+import Detailpeserta from "./Detailpeserta";
+import Pesertatugasakhir from "./Pesertatugasakhir";
+import Kegiatanrepo from "./Kegiatanrepo";
+import Detailrepo from "./Detailrepo";
+import Rekapkehadiran from "./Rekapkehadiran";
+import Laporankegiatan from "./Laporankegiatan";
+import Kegiatansekreemail from "./Kegiatansekreemail";
+import Detailpesertalist from "./Detailpesertalist";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,6 +38,7 @@ function RoutesComponent() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.clear();
+    window.location.href = "/login";
   };
 
   // Memeriksa status autentikasi saat aplikasi dimuat ulang
@@ -80,8 +91,48 @@ function RoutesComponent() {
           element={<GuardedRoute element={<Kegiatansekre />} />}
         />
         <Route
+          path="/kegiatanben"
+          element={<GuardedRoute element={<Kegiatanben />} />}
+        />
+        <Route
           path="/detailpanitia"
           element={<GuardedRoute element={<Detailpanitia />} />}
+        />
+        <Route
+          path="/detailpanitiaben"
+          element={<GuardedRoute element={<Detailpanitiaben />} />}
+        />
+        <Route
+          path="/detailpeserta"
+          element={<GuardedRoute element={<Detailpeserta />} />}
+        />
+        <Route
+          path="/pesertatugasakhir"
+          element={<GuardedRoute element={<Pesertatugasakhir />} />}
+        />
+        <Route
+          path="/kegiatanrepo"
+          element={<GuardedRoute element={<Kegiatanrepo />} />}
+        />
+        <Route
+          path="/detailrepo"
+          element={<GuardedRoute element={<Detailrepo />} />}
+        />
+        <Route
+          path="/rekapkehadiran"
+          element={<GuardedRoute element={<Rekapkehadiran />} />}
+        />
+        <Route
+          path="/laporankegiatan"
+          element={<GuardedRoute element={<Laporankegiatan />} />}
+        />
+        <Route
+          path="/kegiatansekreemail"
+          element={<GuardedRoute element={<Kegiatansekreemail />} />}
+        />
+        <Route
+          path="/detailpesertalist"
+          element={<GuardedRoute element={<Detailpesertalist />} />}
         />
       </Routes>
     </Router>

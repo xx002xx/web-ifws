@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Kegiatansekre = () => {
+const Kegiatanben = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [nama, setNama] = useState("");
@@ -216,34 +216,8 @@ const Kegiatansekre = () => {
         waktu_selesai,
       })
     );
-    navigate("/detailpanitia");
+    navigate("/detailpanitiaben");
   };
-
-  const handlePeserta = (
-    id_kegiatan,
-    id_semester,
-    judul_topik,
-    link_webinar,
-    tanggal_kegiatan,
-    waktu_mulai,
-    waktu_selesai
-  ) => {
-    localStorage.setItem(
-      "panitiaData",
-      JSON.stringify({
-        id_kegiatan,
-        id_semester,
-        judul_topik,
-        link_webinar,
-        tanggal_kegiatan,
-        waktu_mulai,
-        waktu_selesai,
-      })
-    );
-    navigate("/detailpeserta");
-    // Fungsi untuk menangani peserta belum diimplementasikan
-  };
-
   const handleUpdate = (
     id_kegiatan,
     id_semester,
@@ -489,9 +463,7 @@ const Kegiatansekre = () => {
                   <TableCell align="center" className={classes.tableHeader}>
                     Panitia
                   </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Peserta
-                  </TableCell>
+
                   <TableCell align="center" className={classes.tableHeader}>
                     Action
                   </TableCell>
@@ -525,7 +497,7 @@ const Kegiatansekre = () => {
                         {dataKegiatan.waktu_selesai}
                       </TableCell>
                       <TableCell align="center">
-                        <Tooltip title="Panitia">
+                        <Tooltip title="Edit">
                           <IconButton
                             color="primary"
                             onClick={() =>
@@ -548,30 +520,7 @@ const Kegiatansekre = () => {
                           </IconButton>
                         </Tooltip>
                       </TableCell>
-                      <TableCell align="center">
-                        <Tooltip title="Peserta">
-                          <IconButton
-                            color="primary"
-                            onClick={() =>
-                              handlePeserta(
-                                dataKegiatan.id_kegiatan,
-                                dataKegiatan.id_semester,
-                                dataKegiatan.judul_topik,
-                                dataKegiatan.link_webinar,
-                                dataKegiatan.tanggal_kegiatan
-                                  ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
-                                    ).toLocaleDateString("en-CA")
-                                  : "",
-                                dataKegiatan.waktu_mulai,
-                                dataKegiatan.waktu_selesai
-                              )
-                            }
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
+
                       <TableCell align="center">
                         <Tooltip title="Edit">
                           <IconButton
@@ -632,12 +581,12 @@ const Kegiatansekre = () => {
 
 const theme = createTheme();
 
-const kegiatansekreComponent = () => {
+const kegiatanbenComponent = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Kegiatansekre />
+      <Kegiatanben />
     </ThemeProvider>
   );
 };
 
-export default kegiatansekreComponent;
+export default kegiatanbenComponent;
