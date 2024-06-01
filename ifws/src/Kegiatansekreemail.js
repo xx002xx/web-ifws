@@ -545,15 +545,7 @@ const Kegiatansekreemail = () => {
                 fullWidth
               />
             </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpenModal}
-              className={classes.addButton}
-              size="small"
-            >
-              {isAddMode ? "Tambah Data Kegiatan" : "Perbarui Data Kegiatan"}
-            </Button>
+
             <Table>
               <TableHead>
                 <TableRow>

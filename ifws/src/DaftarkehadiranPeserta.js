@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Kegiatan = () => {
+const DaftarkehadiranPeserta = () => {
   const classes = useStyles();
   const [nama, setNama] = useState("");
   const [dataKegiatan, setDataKegiatan] = useState([]);
@@ -106,8 +106,10 @@ const Kegiatan = () => {
 
   const fetchData = async () => {
     try {
+      const id_peserta = localStorage.getItem("id_peserta");
+      console.log(id_peserta);
       const response = await fetch(
-        `${API_URL}/kegiatan/data?limit=5&page=${currentPage}&search=${searchTerm}`,
+        `${API_URL}/kegiatan/kegiatanpeserta?limit=5&offset=${currentPage}&search=${searchTerm}&id_peserta=${id_peserta}`,
         {
           method: "GET",
           headers: {
@@ -246,10 +248,10 @@ const Kegiatan = () => {
     }
   };
 
-  const handleDelete = async (id_kegiatan) => {
+  const handleDelete = async (id_kegiatan, id_panitia, judul_topik) => {
     try {
       const response = await fetch(
-        `${API_URL}/kegiatan/delete/${id_kegiatan}`,
+        `${API_URL}/kegiatan/download/${id_kegiatan}/${id_panitia}`,
         {
           method: "GET",
           headers: {
@@ -259,15 +261,18 @@ const Kegiatan = () => {
       );
 
       if (response.ok) {
-        const updatedDataKegiatan = dataKegiatan.filter(
-          (dataKegiatan) => dataKegiatan.id_kegiatan !== id_kegiatan
-        );
-        setDataKegiatan(updatedDataKegiatan);
         Swal.fire({
           icon: "success",
           title: "Success",
-          text: "Data kegiatan has been deleted successfully!",
+          text: "Berhasil di download!",
         });
+        window.open(
+          `${API_URL}/uploads/sertifikat/${judul_topik.replace(
+            / /g,
+            "_"
+          )}-${nama.replace(/ /g, "_").replace(/\./g, "_")}.pdf`,
+          "_blank"
+        );
       } else {
         console.error("Failed to delete data kegiatan");
       }
@@ -424,22 +429,13 @@ const Kegiatan = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
-                    Semester
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
                     Judul Topik
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
-                    Link Webinar
+                    Kehadiran
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
-                    Tanggal Kegiatan
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Waktu Mulai
-                  </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Waktu Selesai
+                    Sertifikat
                   </TableCell>
                   {localStorage.getItem("nm_role") !== "Narasumber" &&
                     localStorage.getItem("nm_role") !== "Peserta" && (
@@ -453,28 +449,31 @@ const Kegiatan = () => {
                 {dataKegiatan && dataKegiatan.length > 0 ? (
                   dataKegiatan.map((dataKegiatan) => (
                     <TableRow key={dataKegiatan.id_kegiatan}>
-                      <TableCell align="right">
-                        {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
-                        {dataKegiatan.tahun_akhir})
+                      <TableCell>{dataKegiatan.judul_topik}</TableCell>
+
+                      <TableCell align="center">
+                        {dataKegiatan.kehadiran}
                       </TableCell>
                       <TableCell align="center">
-                        {dataKegiatan.judul_topik}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.link_webinar}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.tanggal_kegiatan
-                          ? new Date(
-                              dataKegiatan.tanggal_kegiatan
-                            ).toLocaleDateString("en-CA")
-                          : ""}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_mulai}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_selesai}
+                        {dataKegiatan.kehadiran === 1 ? (
+                          <Tooltip title="Download">
+                            <a
+                              target="_blank"
+                              href={`${API_URL}/uploads/sertifikat/${dataKegiatan.judul_topik.replace(
+                                / /g,
+                                "_"
+                              )}-${nama
+                                .replace(/ /g, "_")
+                                .replace(/\./g, "_")}.pdf`}
+                              download
+                            >
+                              Download
+                            </a>
+                          
+                          </Tooltip>
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                       {localStorage.getItem("nm_role") !== "Narasumber" &&
                         localStorage.getItem("nm_role") !== "Peserta" && (
@@ -539,12 +538,12 @@ const Kegiatan = () => {
 
 const theme = createTheme();
 
-const kegiatanComponent = () => {
+const DaftarkehadiranPesertaComponent = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Kegiatan />
+      <DaftarkehadiranPeserta />
     </ThemeProvider>
   );
 };
 
-export default kegiatanComponent;
+export default DaftarkehadiranPesertaComponent;

@@ -57,6 +57,8 @@ const Login = ({ onLogin }) => {
         localStorage.setItem("username", data.username);
         localStorage.setItem("nama", data.nama);
         localStorage.setItem("nm_role", data.nm_role);
+        localStorage.setItem("id_panitia", data.id_panitia);
+        localStorage.setItem("id_peserta", data.id_peserta);
 
         // Panggil onLogin untuk memperbarui status isLoggedIn
         onLogin();

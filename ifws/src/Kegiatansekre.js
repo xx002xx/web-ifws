@@ -180,17 +180,26 @@ const Kegiatansekre = () => {
         body: JSON.stringify(formData),
       });
 
+      const responseData = await response.json();
       if (!response.ok) {
-        throw new Error("Gagal menambahkan data kegiatan");
+        throw new Error(responseData.message);
       }
 
       fetchData();
       handleCloseModal();
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Data kegiatan has been added successfully!",
-      });
+      if (responseData.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Data kegiatan has been added successfully!",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: responseData.message,
+        });
+      }
     } catch (error) {
       Swal.showValidationMessage(`Request failed: ${error}`);
     }
@@ -262,6 +271,7 @@ const Kegiatansekre = () => {
       waktu_mulai,
       waktu_selesai,
     });
+    console.log(tanggal_kegiatan);
     setIsAddMode(false);
     handleOpenModal();
   };
@@ -280,17 +290,26 @@ const Kegiatansekre = () => {
         }
       );
 
+      const responseData = await response.json();
       if (!response.ok) {
-        throw new Error("Gagal memperbarui data kegiatan");
+        throw new Error(responseData.message);
       }
 
       fetchData();
       handleCloseModal();
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Data kegiatan has been updated successfully!",
-      });
+      if (responseData.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Data kegiatan has been update successfully!",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: responseData.message,
+        });
+      }
     } catch (error) {
       Swal.showValidationMessage(`Request failed: ${error}`);
     }
@@ -331,6 +350,10 @@ const Kegiatansekre = () => {
   };
 
   const renderModalContent = () => {
+    if (!openModal) {
+      return null;
+    }
+
     return (
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>
@@ -342,7 +365,7 @@ const Kegiatansekre = () => {
             label="ID Semester"
             variant="outlined"
             size="small"
-            value={formData.id_semester}
+            value={formData.id_semester || ""}
             onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
@@ -350,7 +373,29 @@ const Kegiatansekre = () => {
             {semesters.map((semester) => (
               <MenuItem key={semester.id_semester} value={semester.id_semester}>
                 {semester.semester} ({semester.tahun_awal} -{" "}
-                {semester.tahun_akhir})
+                {semester.tahun_akhir}) [{" "}
+                {semester.tanggal_awal
+                  ? new Date(semester.tanggal_awal)
+                      .toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                      .replace(/\//g, "/")
+                  : ""}{" "}
+                -{" "}
+                {semester.tanggal_akhir
+                  ? new Date(semester.tanggal_akhir)
+                      .toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                      .replace(/\//g, "/")
+                  : ""}{" "}
+                ]
               </MenuItem>
             ))}
           </Select>
@@ -359,7 +404,7 @@ const Kegiatansekre = () => {
             label="Judul Topik"
             variant="outlined"
             size="small"
-            value={formData.judul_topik}
+            value={formData.judul_topik || ""}
             onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
@@ -369,7 +414,7 @@ const Kegiatansekre = () => {
             label="Link Webinar"
             variant="outlined"
             size="small"
-            value={formData.link_webinar}
+            value={formData.link_webinar || ""}
             onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
@@ -380,11 +425,14 @@ const Kegiatansekre = () => {
             variant="outlined"
             size="small"
             type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
             value={
               formData.tanggal_kegiatan
-                ? new Date(dataKegiatan.tanggal_kegiatan).toLocaleDateString(
-                    "en-CA"
-                  )
+                ? new Date(formData.tanggal_kegiatan)
+                    .toISOString()
+                    .split("T")[0]
                 : ""
             }
             onChange={handleFormChange}
@@ -397,7 +445,7 @@ const Kegiatansekre = () => {
             variant="outlined"
             size="small"
             type="time"
-            value={formData.waktu_mulai}
+            value={formData.waktu_mulai || ""}
             onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
@@ -408,7 +456,7 @@ const Kegiatansekre = () => {
             variant="outlined"
             type="time"
             size="small"
-            value={formData.waktu_selesai}
+            value={formData.waktu_selesai || ""}
             onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
@@ -513,9 +561,14 @@ const Kegiatansekre = () => {
                       </TableCell>
                       <TableCell align="center">
                         {dataKegiatan.tanggal_kegiatan
-                          ? new Date(
-                              dataKegiatan.tanggal_kegiatan
-                            ).toLocaleDateString("en-CA")
+                          ? new Date(dataKegiatan.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
                           : ""}
                       </TableCell>
                       <TableCell align="center">
@@ -537,7 +590,12 @@ const Kegiatansekre = () => {
                                 dataKegiatan.tanggal_kegiatan
                                   ? new Date(
                                       dataKegiatan.tanggal_kegiatan
-                                    ).toLocaleDateString("en-CA")
+                                    ).toLocaleString("id-ID", {
+                                      timeZone: "Asia/Jakarta",
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "numeric",
+                                    })
                                   : "",
                                 dataKegiatan.waktu_mulai,
                                 dataKegiatan.waktu_selesai
@@ -583,9 +641,15 @@ const Kegiatansekre = () => {
                                 dataKegiatan.judul_topik,
                                 dataKegiatan.link_webinar,
                                 dataKegiatan.tanggal_kegiatan
-                                  ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
-                                    ).toLocaleDateString("en-CA")
+                                  ? new Date(dataKegiatan.tanggal_kegiatan)
+                                      .toLocaleDateString("en-CA", {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                        timeZone: "Asia/Jakarta",
+                                      })
+                                      .slice(0, 10)
+                                      .replace(/T/g, "")
                                   : "",
                                 dataKegiatan.waktu_mulai,
                                 dataKegiatan.waktu_selesai

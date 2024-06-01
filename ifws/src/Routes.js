@@ -25,6 +25,8 @@ import Rekapkehadiran from "./Rekapkehadiran";
 import Laporankegiatan from "./Laporankegiatan";
 import Kegiatansekreemail from "./Kegiatansekreemail";
 import Detailpesertalist from "./Detailpesertalist";
+import DaftarkehadiranNarsum from "./DaftarkehadiranNarsum";
+import DaftarkehadiranPeserta from "./DaftarkehadiranPeserta";
 
 function RoutesComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -133,6 +135,14 @@ function RoutesComponent() {
         <Route
           path="/detailpesertalist"
           element={<GuardedRoute element={<Detailpesertalist />} />}
+        />
+        <Route
+          path="/daftarkehadirannarsum"
+          element={<GuardedRoute element={<DaftarkehadiranNarsum />} />}
+        />
+        <Route
+          path="/daftarkehadiranpeserta"
+          element={<GuardedRoute element={<DaftarkehadiranPeserta />} />}
         />
       </Routes>
     </Router>

@@ -272,7 +272,7 @@ const Panitia = () => {
   const handleOpenAkunModal = (idPanitia, namaPanitia, idRole) => {
     setAkunData({
       id_panitia: idPanitia,
-      nama_panitia: namaPanitia,
+      nama: namaPanitia,
       id_role: idRole,
     });
     setOpenAkunModal(true);
@@ -392,11 +392,21 @@ const Panitia = () => {
             className={classes.formInput}
           />
           <TextField
-            name="email"
+            name="nama"
+            label="Nama"
+            variant="outlined"
+            size="small"
+            value={akunData.nama}
+            onChange={handleAkunFormChange}
+            fullWidth
+            className={classes.formInput}
+          />
+          <TextField
+            name="email_akun"
             label="Email"
             variant="outlined"
             size="small"
-            value={akunData.email}
+            value={akunData.email_akun}
             onChange={handleAkunFormChange}
             fullWidth
             className={classes.formInput}
@@ -504,18 +514,21 @@ const Panitia = () => {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Akun">
-                        <IconButton
-                          color="primary"
-                          onClick={() =>
-                            handleOpenAkunModal(
-                              panitia.id_panitia,
-                              panitia.nama_panitia,
-                              panitia.id_role
-                            )
-                          }
-                        >
-                          buat akun <AddIcon />
-                        </IconButton>
+                        {panitia.nm_role === "Narasumber" && (
+                          <IconButton
+                            color="primary"
+                            onClick={() =>
+                              handleOpenAkunModal(
+                                panitia.id_panitia,
+                                panitia.nama_panitia,
+                                panitia.id_role
+                              )
+                            }
+                          >
+                            <span style={{ fontSize: 13 }}>buat akun</span>{" "}
+                            <AddIcon />
+                          </IconButton>
+                        )}
                       </Tooltip>
                       <Tooltip title="Delete">
                         <IconButton
