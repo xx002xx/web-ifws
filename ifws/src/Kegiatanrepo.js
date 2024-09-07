@@ -461,6 +461,9 @@ const Kegiatanrepo = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Semester
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -485,8 +488,10 @@ const Kegiatanrepo = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
+                  dataKegiatan.map((dataKegiatan, index) => (
                     <TableRow key={dataKegiatan.id_kegiatan}>
+                      <TableCell align="center">{index + 1}</TableCell>{" "}
+                      {/* Add No */}
                       <TableCell align="right">
                         {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
                         {dataKegiatan.tahun_akhir})
@@ -510,7 +515,6 @@ const Kegiatanrepo = () => {
                       <TableCell align="center">
                         {dataKegiatan.waktu_selesai}
                       </TableCell>
-
                       <TableCell align="center">
                         <Tooltip title="Repository">
                           <IconButton

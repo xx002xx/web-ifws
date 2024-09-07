@@ -429,6 +429,9 @@ const DaftarkehadiranNarsum = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Judul Topik
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -447,23 +450,24 @@ const DaftarkehadiranNarsum = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
-                    <TableRow key={dataKegiatan.id_kegiatan}>
-                      <TableCell>{dataKegiatan.judul_topik}</TableCell>
-
+                  dataKegiatan.map((item, index) => (
+                    <TableRow key={item.id_kegiatan}>
                       <TableCell align="center">
-                        {dataKegiatan.kehadiran}
-                      </TableCell>
+                        {(currentPage - 1) * 5 + (index + 1)}
+                      </TableCell>{" "}
+                      {/* No column */}
+                      <TableCell>{item.judul_topik}</TableCell>
+                      <TableCell align="center">{item.kehadiran}</TableCell>
                       <TableCell align="center">
-                        {dataKegiatan.kehadiran === 1 ? (
+                        {item.kehadiran === 1 ? (
                           <Tooltip title="Download">
                             <IconButton
                               color="error"
                               onClick={() =>
                                 handleDelete(
-                                  dataKegiatan.id_kegiatan,
-                                  dataKegiatan.id_panitia,
-                                  dataKegiatan.judul_topik
+                                  item.id_kegiatan,
+                                  item.id_panitia,
+                                  item.judul_topik
                                 )
                               }
                               style={{ fontSize: 12 }}
@@ -483,17 +487,17 @@ const DaftarkehadiranNarsum = () => {
                                 color="primary"
                                 onClick={() =>
                                   handleUpdate(
-                                    dataKegiatan.id_kegiatan,
-                                    dataKegiatan.id_semester,
-                                    dataKegiatan.judul_topik,
-                                    dataKegiatan.link_webinar,
-                                    dataKegiatan.tanggal_kegiatan
+                                    item.id_kegiatan,
+                                    item.id_semester,
+                                    item.judul_topik,
+                                    item.link_webinar,
+                                    item.tanggal_kegiatan
                                       ? new Date(
-                                          dataKegiatan.tanggal_kegiatan
+                                          item.tanggal_kegiatan
                                         ).toLocaleDateString("en-CA")
                                       : "",
-                                    dataKegiatan.waktu_mulai,
-                                    dataKegiatan.waktu_selesai
+                                    item.waktu_mulai,
+                                    item.waktu_selesai
                                   )
                                 }
                               >
@@ -503,9 +507,7 @@ const DaftarkehadiranNarsum = () => {
                             <Tooltip title="Delete">
                               <IconButton
                                 color="error"
-                                onClick={() =>
-                                  handleDelete(dataKegiatan.id_kegiatan)
-                                }
+                                onClick={() => handleDelete(item.id_kegiatan)}
                               >
                                 <DeleteIcon />
                               </IconButton>
@@ -516,7 +518,16 @@ const DaftarkehadiranNarsum = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8}>No data available</TableCell>
+                    <TableCell
+                      colSpan={
+                        localStorage.getItem("nm_role") !== "Narasumber" &&
+                        localStorage.getItem("nm_role") !== "mahasiswa"
+                          ? 5
+                          : 4
+                      }
+                    >
+                      No data available
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

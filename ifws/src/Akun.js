@@ -381,6 +381,9 @@ const Akun = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Username
                   </TableCell>
@@ -399,26 +402,27 @@ const Akun = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataAkun.map((dataAkun) => (
-                  <TableRow
-                    key={dataAkun.username}
-                    className={classes.tableRow}
-                  >
-                    <TableCell>{dataAkun.username}</TableCell>
-                    <TableCell align="right">{dataAkun.nama}</TableCell>
-                    <TableCell align="center">{dataAkun.email_akun}</TableCell>
-                    <TableCell align="center">{dataAkun.nm_role}</TableCell>
+                {dataAkun.map((item, index) => (
+                  <TableRow key={item.username} className={classes.tableRow}>
+                    <TableCell align="center">
+                      {(currentPage - 1) * 5 + (index + 1)}
+                    </TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.username}</TableCell>
+                    <TableCell align="right">{item.nama}</TableCell>
+                    <TableCell align="center">{item.email_akun}</TableCell>
+                    <TableCell align="center">{item.nm_role}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
                         <IconButton
                           color="primary"
                           onClick={() =>
                             handleUpdate(
-                              dataAkun.username,
-                              dataAkun.nama,
-                              dataAkun.email_akun,
-                              dataAkun.password,
-                              dataAkun.id_role
+                              item.username,
+                              item.nama,
+                              item.email_akun,
+                              item.password,
+                              item.id_role
                             )
                           }
                         >
@@ -428,7 +432,7 @@ const Akun = () => {
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() => handleDelete(dataAkun.username)}
+                          onClick={() => handleDelete(item.username)}
                         >
                           <DeleteIcon />
                         </IconButton>

@@ -87,6 +87,7 @@ const DaftarkehadiranPeserta = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [setIDSemester, setidsmstr] = useState("");
   const [formData, setFormData] = useState({
     id_semester: "",
     judul_topik: "",
@@ -102,14 +103,14 @@ const DaftarkehadiranPeserta = () => {
   useEffect(() => {
     fetchData();
     fetchSemesters();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, setIDSemester]);
 
   const fetchData = async () => {
     try {
       const id_peserta = localStorage.getItem("id_peserta");
       console.log(id_peserta);
       const response = await fetch(
-        `${API_URL}/kegiatan/kegiatanpeserta?limit=5&offset=${currentPage}&search=${searchTerm}&id_peserta=${id_peserta}`,
+        `${API_URL}/kegiatan/kegiatanpeserta?limit=5&offset=${currentPage}&search=${searchTerm}&id_peserta=${id_peserta}&id_semester=${setIDSemester}`,
         {
           method: "GET",
           headers: {
@@ -281,6 +282,11 @@ const DaftarkehadiranPeserta = () => {
     }
   };
 
+  const handleChangeStatusTa = async (event) => {
+    const id_semester = event.target.value;
+    setidsmstr(id_semester);
+  };
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -410,7 +416,53 @@ const DaftarkehadiranPeserta = () => {
                 onChange={handleSearch}
                 fullWidth
               />
+              <Typography variant="body1" className={classes.formLabel}>
+                Semester
+              </Typography>
+              <Select
+                name="id_semester"
+                label="Semester"
+                variant="outlined"
+                size="small"
+                onChange={handleChangeStatusTa}
+                fullWidth
+                className={classes.formInput}
+              >
+                <MenuItem value="">Semua Semester</MenuItem>
+                {semesters.map((semester) => (
+                  <MenuItem
+                    key={semester.id_semester}
+                    value={semester.id_semester}
+                  >
+                    {semester.semester} ({semester.tahun_awal} -{" "}
+                    {semester.tahun_akhir}) [{" "}
+                    {semester.tanggal_awal
+                      ? new Date(semester.tanggal_awal)
+                          .toLocaleString("id-ID", {
+                            timeZone: "Asia/Jakarta",
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })
+                          .replace(/\//g, "/")
+                      : ""}{" "}
+                    -{" "}
+                    {semester.tanggal_akhir
+                      ? new Date(semester.tanggal_akhir)
+                          .toLocaleString("id-ID", {
+                            timeZone: "Asia/Jakarta",
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })
+                          .replace(/\//g, "/")
+                      : ""}{" "}
+                    ]
+                  </MenuItem>
+                ))}
+              </Select>
             </Box>
+
             {localStorage.getItem("nm_role") !== "Narasumber" &&
               localStorage.getItem("nm_role") !== "Peserta" && (
                 <Button
@@ -429,14 +481,26 @@ const DaftarkehadiranPeserta = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Judul Topik
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    Tahun Ajaran
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Kehadiran
                   </TableCell>
+                  {localStorage.getItem("nm_role") !== "Narasumber" && (
+                    <TableCell align="center" className={classes.tableHeader}>
+                      Durasi
+                    </TableCell>
+                  )}
                   <TableCell align="center" className={classes.tableHeader}>
                     Sertifikat
                   </TableCell>
+
                   {localStorage.getItem("nm_role") !== "Narasumber" &&
                     localStorage.getItem("nm_role") !== "Peserta" && (
                       <TableCell align="center" className={classes.tableHeader}>
@@ -447,19 +511,26 @@ const DaftarkehadiranPeserta = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
-                    <TableRow key={dataKegiatan.id_kegiatan}>
-                      <TableCell>{dataKegiatan.judul_topik}</TableCell>
-
+                  dataKegiatan.map((item, index) => (
+                    <TableRow key={item.id_kegiatan}>
                       <TableCell align="center">
-                        {dataKegiatan.kehadiran}
-                      </TableCell>
+                        {(currentPage - 1) * 5 + (index + 1)}
+                      </TableCell>{" "}
+                      {/* No column */}
+                      <TableCell>{item.judul_topik}</TableCell>
+                      <TableCell align="center">{item.smstr_ta}</TableCell>
+                      <TableCell align="center">{item.kehadiran}</TableCell>
+                      {localStorage.getItem("nm_role") !== "Narasumber" && (
+                        <TableCell align="center">
+                          {item.duration} Menit
+                        </TableCell>
+                      )}
                       <TableCell align="center">
-                        {dataKegiatan.kehadiran === 1 ? (
+                        {item.duration >= 45 ? (
                           <Tooltip title="Download">
                             <a
                               target="_blank"
-                              href={`${API_URL}/uploads/sertifikat/${dataKegiatan.judul_topik.replace(
+                              href={`${API_URL}/uploads/sertifikat/${item.judul_topik.replace(
                                 / /g,
                                 "_"
                               )}-${nama
@@ -469,10 +540,9 @@ const DaftarkehadiranPeserta = () => {
                             >
                               Download
                             </a>
-                          
                           </Tooltip>
                         ) : (
-                          "-"
+                          "Tidak memenuhi durasi minimum"
                         )}
                       </TableCell>
                       {localStorage.getItem("nm_role") !== "Narasumber" &&
@@ -483,17 +553,17 @@ const DaftarkehadiranPeserta = () => {
                                 color="primary"
                                 onClick={() =>
                                   handleUpdate(
-                                    dataKegiatan.id_kegiatan,
-                                    dataKegiatan.id_semester,
-                                    dataKegiatan.judul_topik,
-                                    dataKegiatan.link_webinar,
-                                    dataKegiatan.tanggal_kegiatan
+                                    item.id_kegiatan,
+                                    item.id_semester,
+                                    item.judul_topik,
+                                    item.link_webinar,
+                                    item.tanggal_kegiatan
                                       ? new Date(
-                                          dataKegiatan.tanggal_kegiatan
+                                          item.tanggal_kegiatan
                                         ).toLocaleDateString("en-CA")
                                       : "",
-                                    dataKegiatan.waktu_mulai,
-                                    dataKegiatan.waktu_selesai
+                                    item.waktu_mulai,
+                                    item.waktu_selesai
                                   )
                                 }
                               >
@@ -503,9 +573,7 @@ const DaftarkehadiranPeserta = () => {
                             <Tooltip title="Delete">
                               <IconButton
                                 color="error"
-                                onClick={() =>
-                                  handleDelete(dataKegiatan.id_kegiatan)
-                                }
+                                onClick={() => handleDelete(item.id_kegiatan)}
                               >
                                 <DeleteIcon />
                               </IconButton>
@@ -516,7 +584,16 @@ const DaftarkehadiranPeserta = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8}>No data available</TableCell>
+                    <TableCell
+                      colSpan={
+                        localStorage.getItem("nm_role") !== "Narasumber" &&
+                        localStorage.getItem("nm_role") !== "Peserta"
+                          ? 5
+                          : 4
+                      }
+                    >
+                      No data available
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

@@ -390,6 +390,9 @@ const Semester = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Tahun Awal
                   </TableCell>
@@ -411,24 +414,25 @@ const Semester = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {semester.map((semester) => (
-                  <TableRow
-                    key={semester.tahun_awal}
-                    className={classes.tableRow}
-                  >
-                    <TableCell>{semester.tahun_awal}</TableCell>
-                    <TableCell align="right"> {semester.tahun_akhir}</TableCell>
-                    <TableCell align="center">{semester.semester}</TableCell>
+                {semester.map((item, index) => (
+                  <TableRow key={item.id_semester} className={classes.tableRow}>
                     <TableCell align="center">
-                      {semester.tanggal_awal
-                        ? new Date(semester.tanggal_awal).toLocaleDateString(
+                      {(currentPage - 1) * 5 + (index + 1)}
+                    </TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.tahun_awal}</TableCell>
+                    <TableCell align="right">{item.tahun_akhir}</TableCell>
+                    <TableCell align="center">{item.semester}</TableCell>
+                    <TableCell align="center">
+                      {item.tanggal_awal
+                        ? new Date(item.tanggal_awal).toLocaleDateString(
                             "en-CA"
                           )
                         : ""}
                     </TableCell>
                     <TableCell align="center">
-                      {semester.tanggal_akhir
-                        ? new Date(semester.tanggal_akhir).toLocaleDateString(
+                      {item.tanggal_akhir
+                        ? new Date(item.tanggal_akhir).toLocaleDateString(
                             "en-CA"
                           )
                         : ""}
@@ -439,12 +443,12 @@ const Semester = () => {
                           color="primary"
                           onClick={() =>
                             handleUpdate(
-                              semester.id_semester,
-                              semester.tahun_awal,
-                              semester.tahun_akhir,
-                              semester.semester,
-                              semester.tanggal_awal,
-                              semester.tanggal_akhir
+                              item.id_semester,
+                              item.tahun_awal,
+                              item.tahun_akhir,
+                              item.semester,
+                              item.tanggal_awal,
+                              item.tanggal_akhir
                             )
                           }
                         >
@@ -454,7 +458,7 @@ const Semester = () => {
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() => handleDelete(semester.id_semester)}
+                          onClick={() => handleDelete(item.id_semester)}
                         >
                           <DeleteIcon />
                         </IconButton>

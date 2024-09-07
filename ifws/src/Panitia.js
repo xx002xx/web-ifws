@@ -477,6 +477,9 @@ const Panitia = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Nama Panitia
                   </TableCell>
@@ -489,24 +492,24 @@ const Panitia = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
-                  <TableRow
-                    key={panitia.id_panitia}
-                    className={classes.tableRow}
-                  >
-                    <TableCell>{panitia.nama_panitia}</TableCell>
-
-                    <TableCell align="center">{panitia.nm_role}</TableCell>
+                {panitia.map((item, index) => (
+                  <TableRow key={item.id_panitia} className={classes.tableRow}>
+                    <TableCell align="center">
+                      {(currentPage - 1) * 5 + (index + 1)}
+                    </TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.nama_panitia}</TableCell>
+                    <TableCell align="center">{item.nm_role}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
                         <IconButton
                           color="primary"
                           onClick={() =>
                             handleUpdate(
-                              panitia.id_panitia,
-                              panitia.nama_panitia,
-                              panitia.rate_panitia,
-                              panitia.id_role
+                              item.id_panitia,
+                              item.nama_panitia,
+                              item.rate_panitia,
+                              item.id_role
                             )
                           }
                         >
@@ -514,14 +517,14 @@ const Panitia = () => {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Akun">
-                        {panitia.nm_role === "Narasumber" && (
+                        {item.nm_role === "Narasumber" && (
                           <IconButton
                             color="primary"
                             onClick={() =>
                               handleOpenAkunModal(
-                                panitia.id_panitia,
-                                panitia.nama_panitia,
-                                panitia.id_role
+                                item.id_panitia,
+                                item.nama_panitia,
+                                item.id_role
                               )
                             }
                           >
@@ -533,7 +536,7 @@ const Panitia = () => {
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() => handleDelete(panitia.id_panitia)}
+                          onClick={() => handleDelete(item.id_panitia)}
                         >
                           <DeleteIcon />
                         </IconButton>

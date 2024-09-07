@@ -545,6 +545,9 @@ const Detailpeserta = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>Nama</TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     NPM
@@ -564,21 +567,21 @@ const Detailpeserta = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+                {panitia.map((item, index) => (
                   <TableRow
-                    key={panitia.id_detail_peserta}
+                    key={item.id_detail_peserta}
                     className={classes.tableRow}
                   >
-                    <TableCell>{panitia.nama}</TableCell>
-                    <TableCell align="center">{panitia.npm}</TableCell>
-                    <TableCell align="center">{panitia.email}</TableCell>
-                    <TableCell align="center">{panitia.no_semester}</TableCell>
+                    <TableCell align="center">{index + 1}</TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.nama}</TableCell>
+                    <TableCell align="center">{item.npm}</TableCell>
+                    <TableCell align="center">{item.email}</TableCell>
+                    <TableCell align="center">{item.smstr_ta}</TableCell>
+                    <TableCell align="center">{item.status_peserta}</TableCell>
                     <TableCell align="center">
-                      {panitia.status_peserta}
-                    </TableCell>
-                    <TableCell align="center">
-                      {panitia.duration
-                        ? panitia.duration.toLocaleString("id-ID")
+                      {item.duration
+                        ? item.duration.toLocaleString("id-ID")
                         : "0"}
                     </TableCell>
                   </TableRow>

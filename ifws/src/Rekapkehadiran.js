@@ -554,6 +554,9 @@ const Rekapkehadiran = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>Nama</TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     NPM
@@ -573,11 +576,13 @@ const Rekapkehadiran = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+                {panitia.map((panitia, index) => (
                   <TableRow
                     key={panitia.id_peserta}
                     className={classes.tableRow}
                   >
+                    <TableCell align="center">{index + 1}</TableCell>{" "}
+                    {/* Add No */}
                     <TableCell>{panitia.nama}</TableCell>
                     <TableCell align="center">{panitia.npm}</TableCell>
                     <TableCell align="center">{panitia.email || "-"}</TableCell>
@@ -586,7 +591,7 @@ const Rekapkehadiran = () => {
                       {panitia.status_peserta}
                     </TableCell>
                     <TableCell align="center">
-                      {panitia.jumlah > 3 ? (
+                      {panitia.jumlah > 2 ? (
                         "Tercapai"
                       ) : (
                         <span style={{ color: "red" }}>Belum tercapai</span>

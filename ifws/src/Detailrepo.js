@@ -554,6 +554,9 @@ const Detailrepo = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Nama File
                   </TableCell>
@@ -569,27 +572,29 @@ const Detailrepo = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+                {panitia.map((item, index) => (
                   <TableRow
-                    key={panitia.id_repository}
+                    key={item.id_repository}
                     className={classes.tableRow}
                   >
-                    <TableCell>{panitia.nama_file}</TableCell>
+                    <TableCell align="center">{index + 1}</TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.nama_file}</TableCell>
                     <TableCell align="center">
                       <a
                         target="_blank"
-                        href={`${API_URL}/${panitia.url_file}`}
+                        href={`${API_URL}/${item.url_file}`}
                         download
                       >
                         Download
                       </a>
                     </TableCell>
-                    <TableCell align="center">{panitia.nama}</TableCell>
+                    <TableCell align="center">{item.nama}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() => handleDelete(panitia.id_repository)}
+                          onClick={() => handleDelete(item.id_repository)}
                         >
                           <DeleteIcon />
                         </IconButton>

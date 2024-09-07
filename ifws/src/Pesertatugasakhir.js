@@ -98,6 +98,7 @@ const Pesertatugasakhir = () => {
   const [openModalRate, setOpenModalRate] = useState(false);
   const [roles, setRoles] = useState([]);
   const [rolesNot, setRolesNot] = useState([]);
+  const [semesters, setSemesters] = useState([]);
 
   useEffect(() => {
     const namaPengguna = localStorage.getItem("nama");
@@ -109,6 +110,7 @@ const Pesertatugasakhir = () => {
     console.log("data :", dataKegiatan);
     fetchRoles();
     fetchRoleNotNarasumber();
+    fetchSemesters();
   }, [currentPage, searchTerm]);
 
   useEffect(() => {
@@ -118,6 +120,21 @@ const Pesertatugasakhir = () => {
       fetchDatano();
     }
   }, [dataKegiatan]);
+
+  const fetchSemesters = async () => {
+    try {
+      const response = await fetch(`${API_URL}/semester`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      });
+      const data = await response.json();
+      setSemesters(data);
+    } catch (error) {
+      console.error("Error fetching semesters:", error);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -270,6 +287,11 @@ const Pesertatugasakhir = () => {
       Object.keys(formData).forEach((key) => {
         formDataWithFile.append(key, formData[key]);
       });
+
+      if (formData.id_semester) {
+        formDataWithFile.append("id_semester", formData.id_semester);
+      }
+
       const fileInput = document.querySelector('input[name="upload_panitia"]');
       if (fileInput && fileInput.files[0]) {
         formDataWithFile.append("file", fileInput.files[0]);
@@ -397,6 +419,52 @@ const Pesertatugasakhir = () => {
           {isAddMode ? "Pilih File Data" : "Pilih File Data"}
         </DialogTitle>
         <DialogContent>
+          <Typography variant="body1" className={classes.formLabel}>
+            Semester
+          </Typography>
+          <Select
+            name="id_semester"
+            label="Semester"
+            variant="outlined"
+            size="small"
+            value={formData.id_semester || ""}
+            onChange={handleFormChange}
+            fullWidth
+            className={classes.formInput}
+          >
+            <MenuItem value="" disabled>
+              Pilih semester
+            </MenuItem>
+            {semesters.map((semester) => (
+              <MenuItem key={semester.id_semester} value={semester.id_semester}>
+                {semester.semester} ({semester.tahun_awal} -{" "}
+                {semester.tahun_akhir}) [{" "}
+                {semester.tanggal_awal
+                  ? new Date(semester.tanggal_awal)
+                      .toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                      .replace(/\//g, "/")
+                  : ""}{" "}
+                -{" "}
+                {semester.tanggal_akhir
+                  ? new Date(semester.tanggal_akhir)
+                      .toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                      .replace(/\//g, "/")
+                  : ""}{" "}
+                ]
+              </MenuItem>
+            ))}
+          </Select>
+
           <input
             type="file"
             name="upload_panitia"
@@ -527,6 +595,7 @@ const Pesertatugasakhir = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell className={classes.tableHeader}>No</TableCell>
                   <TableCell className={classes.tableHeader}>Nama</TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     NPM
@@ -546,15 +615,16 @@ const Pesertatugasakhir = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+                {panitia.map((panitia, index) => (
                   <TableRow
                     key={panitia.id_peserta}
                     className={classes.tableRow}
                   >
+                    <TableCell>{index + 1}</TableCell> {/* No column */}
                     <TableCell>{panitia.nama}</TableCell>
                     <TableCell align="center">{panitia.npm}</TableCell>
                     <TableCell align="center">{panitia.email || "-"}</TableCell>
-                    <TableCell align="center">{panitia.no_semester}</TableCell>
+                    <TableCell align="center">{panitia.smstr_ta}</TableCell>
                     <TableCell align="center">
                       {panitia.status_peserta}
                     </TableCell>

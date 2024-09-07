@@ -550,6 +550,9 @@ const Kegiatansekreemail = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Semester
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -591,8 +594,10 @@ const Kegiatansekreemail = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
+                  dataKegiatan.map((dataKegiatan, index) => (
                     <TableRow key={dataKegiatan.id_kegiatan}>
+                      <TableCell align="center">{index + 1}</TableCell>{" "}
+                      {/* No column */}
                       <TableCell align="right">
                         {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
                         {dataKegiatan.tahun_akhir})
@@ -665,7 +670,7 @@ const Kegiatansekreemail = () => {
                                 dataKegiatan.waktu_selesai
                               )
                             }
-                            style={{ fontSize: 12 }} // Set font size to 12
+                            style={{ fontSize: 12 }}
                           >
                             Lihat
                           </IconButton>
@@ -681,9 +686,9 @@ const Kegiatansekreemail = () => {
                                 onClick={() =>
                                   handlegenerate(dataKegiatan.id_kegiatan)
                                 }
-                                style={{ fontSize: 12 }} // Set font size to 12
+                                style={{ fontSize: 12 }}
                               >
-                                Generate
+                                Generate Sertifikat
                               </IconButton>
                             </Tooltip>
                           </TableCell>
@@ -694,7 +699,7 @@ const Kegiatansekreemail = () => {
                                 onClick={() =>
                                   handleKirimEmail(dataKegiatan.id_kegiatan)
                                 }
-                                style={{ fontSize: 12 }} // Set font size to 12
+                                style={{ fontSize: 12 }}
                               >
                                 Kirim
                               </IconButton>

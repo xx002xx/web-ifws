@@ -575,6 +575,9 @@ const Detailpanitiaben = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>Nama</TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Jabatan
@@ -588,25 +591,25 @@ const Detailpanitiaben = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+                {panitia.map((item, index) => (
                   <TableRow
-                    key={panitia.id_detail_panitia}
+                    key={item.id_detail_panitia}
                     className={classes.tableRow}
                   >
-                    <TableCell>{panitia.nama_panitia}</TableCell>
-                    <TableCell align="center">{panitia.nm_role}</TableCell>
+                    <TableCell align="center">{index + 1}</TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.nama_panitia}</TableCell>
+                    <TableCell align="center">{item.nm_role}</TableCell>
                     <TableCell align="center">
-                      {panitia.rate_panitia
-                        ? panitia.rate_panitia.toLocaleString("id-ID")
+                      {item.rate_panitia
+                        ? item.rate_panitia.toLocaleString("id-ID")
                         : "0"}
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() =>
-                            handleDelete(panitia.id_detail_panitia)
-                          }
+                          onClick={() => handleDelete(item.id_detail_panitia)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -614,7 +617,7 @@ const Detailpanitiaben = () => {
                       <Tooltip title="Edit">
                         <IconButton
                           color="primary"
-                          onClick={() => handleOpenModalRate(panitia)}
+                          onClick={() => handleOpenModalRate(item)}
                         >
                           <EditIcon />
                         </IconButton>
@@ -624,6 +627,7 @@ const Detailpanitiaben = () => {
                 ))}
               </TableBody>
             </Table>
+
             <Typography variant="h6" gutterBottom>
               Data Panitia
             </Typography>
@@ -639,6 +643,9 @@ const Detailpanitiaben = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>Nama</TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Jabatan
@@ -652,25 +659,25 @@ const Detailpanitiaben = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitiaNo.map((panitiaNo) => (
+                {panitiaNo.map((item, index) => (
                   <TableRow
-                    key={panitiaNo.id_detail_panitia}
+                    key={item.id_detail_panitia}
                     className={classes.tableRow}
                   >
-                    <TableCell>{panitiaNo.nama_panitia}</TableCell>
-                    <TableCell align="center">{panitiaNo.nm_role}</TableCell>
+                    <TableCell align="center">{index + 1}</TableCell>{" "}
+                    {/* No column */}
+                    <TableCell>{item.nama_panitia}</TableCell>
+                    <TableCell align="center">{item.nm_role}</TableCell>
                     <TableCell align="center">
-                      {panitiaNo.rate_panitia
-                        ? panitiaNo.rate_panitia.toLocaleString()
-                        : 0}
+                      {item.rate_panitia
+                        ? item.rate_panitia.toLocaleString()
+                        : "0"}
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton
                           color="error"
-                          onClick={() =>
-                            handleDelete(panitiaNo.id_detail_panitia)
-                          }
+                          onClick={() => handleDelete(item.id_detail_panitia)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -678,7 +685,7 @@ const Detailpanitiaben = () => {
                       <Tooltip title="Edit">
                         <IconButton
                           color="primary"
-                          onClick={() => handleOpenModalRate(panitiaNo)}
+                          onClick={() => handleOpenModalRate(item)}
                         >
                           <EditIcon />
                         </IconButton>

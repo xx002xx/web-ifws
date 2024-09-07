@@ -23,6 +23,8 @@ import {
   DialogActions,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
@@ -287,23 +289,50 @@ const Kegiatan = () => {
           {isAddMode ? "Tambah Data Kegiatan" : "Perbarui Data Kegiatan"}
         </DialogTitle>
         <DialogContent>
-          <Select
-            name="id_semester"
-            label="ID Semester"
+          <FormControl
             variant="outlined"
             size="small"
-            value={formData.id_semester}
-            onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
           >
-            {semesters.map((semester) => (
-              <MenuItem key={semester.id_semester} value={semester.id_semester}>
-                {semester.semester} ({semester.tahun_awal} -{" "}
-                {semester.tahun_akhir})
-              </MenuItem>
-            ))}
-          </Select>
+            <InputLabel id="semester-label">ID Semester</InputLabel>
+            <Select
+              name="id_semester"
+              labelId="semester-label"
+              label="ID Semester"
+              value={formData.id_semester}
+              onChange={handleFormChange}
+            >
+              {semesters.map((semester) => (
+                <MenuItem
+                  key={semester.id_semester}
+                  value={semester.id_semester}
+                >
+                  {semester.semester} ({semester.tahun_awal} -{" "}
+                  {semester.tahun_akhir})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            size="small"
+            fullWidth
+            className={classes.formInput}
+          >
+            <InputLabel id="tingkat-label">Tingkat</InputLabel>
+            <Select
+              name="tingkat"
+              labelId="tingkat-label"
+              label="Tingkat"
+              value={formData.tingkat}
+              onChange={handleFormChange}
+            >
+              <MenuItem value="Nasional">Nasional</MenuItem>
+              <MenuItem value="Internasional">Internasional</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             name="judul_topik"
             label="Judul Topik"
@@ -424,10 +453,16 @@ const Kegiatan = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Semester
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Judul Topik
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    Tingkat
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Link Webinar
@@ -451,31 +486,27 @@ const Kegiatan = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
-                    <TableRow key={dataKegiatan.id_kegiatan}>
+                  dataKegiatan.map((item, index) => (
+                    <TableRow key={item.id_kegiatan}>
+                      <TableCell align="center">
+                        {(currentPage - 1) * 5 + (index + 1)}
+                      </TableCell>{" "}
+                      {/* No column */}
                       <TableCell align="right">
-                        {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
-                        {dataKegiatan.tahun_akhir})
+                        {item.semester} ({item.tahun_awal} - {item.tahun_akhir})
                       </TableCell>
+                      <TableCell align="center">{item.judul_topik}</TableCell>
+                      <TableCell align="center">{item.tingkat}</TableCell>
+                      <TableCell align="center">{item.link_webinar}</TableCell>
                       <TableCell align="center">
-                        {dataKegiatan.judul_topik}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.link_webinar}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.tanggal_kegiatan
-                          ? new Date(
-                              dataKegiatan.tanggal_kegiatan
-                            ).toLocaleDateString("en-CA")
+                        {item.tanggal_kegiatan
+                          ? new Date(item.tanggal_kegiatan).toLocaleDateString(
+                              "en-CA"
+                            )
                           : ""}
                       </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_mulai}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_selesai}
-                      </TableCell>
+                      <TableCell align="center">{item.waktu_mulai}</TableCell>
+                      <TableCell align="center">{item.waktu_selesai}</TableCell>
                       {localStorage.getItem("nm_role") !== "Narasumber" &&
                         localStorage.getItem("nm_role") !== "Peserta" && (
                           <TableCell align="center">
@@ -484,17 +515,17 @@ const Kegiatan = () => {
                                 color="primary"
                                 onClick={() =>
                                   handleUpdate(
-                                    dataKegiatan.id_kegiatan,
-                                    dataKegiatan.id_semester,
-                                    dataKegiatan.judul_topik,
-                                    dataKegiatan.link_webinar,
-                                    dataKegiatan.tanggal_kegiatan
+                                    item.id_kegiatan,
+                                    item.id_semester,
+                                    item.judul_topik,
+                                    item.link_webinar,
+                                    item.tanggal_kegiatan
                                       ? new Date(
-                                          dataKegiatan.tanggal_kegiatan
+                                          item.tanggal_kegiatan
                                         ).toLocaleDateString("en-CA")
                                       : "",
-                                    dataKegiatan.waktu_mulai,
-                                    dataKegiatan.waktu_selesai
+                                    item.waktu_mulai,
+                                    item.waktu_selesai
                                   )
                                 }
                               >
@@ -504,9 +535,7 @@ const Kegiatan = () => {
                             <Tooltip title="Delete">
                               <IconButton
                                 color="error"
-                                onClick={() =>
-                                  handleDelete(dataKegiatan.id_kegiatan)
-                                }
+                                onClick={() => handleDelete(item.id_kegiatan)}
                               >
                                 <DeleteIcon />
                               </IconButton>

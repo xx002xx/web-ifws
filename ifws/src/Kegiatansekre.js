@@ -24,6 +24,8 @@ import {
   DialogActions,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
@@ -208,6 +210,7 @@ const Kegiatansekre = () => {
     id_kegiatan,
     id_semester,
     judul_topik,
+    tingkat,
     link_webinar,
     tanggal_kegiatan,
     waktu_mulai,
@@ -219,6 +222,7 @@ const Kegiatansekre = () => {
         id_kegiatan,
         id_semester,
         judul_topik,
+        tingkat,
         link_webinar,
         tanggal_kegiatan,
         waktu_mulai,
@@ -257,6 +261,7 @@ const Kegiatansekre = () => {
     id_kegiatan,
     id_semester,
     judul_topik,
+    tingkat,
     link_webinar,
     tanggal_kegiatan,
     waktu_mulai,
@@ -266,6 +271,7 @@ const Kegiatansekre = () => {
       id_kegiatan,
       id_semester,
       judul_topik,
+      tingkat,
       link_webinar,
       tanggal_kegiatan,
       waktu_mulai,
@@ -360,45 +366,72 @@ const Kegiatansekre = () => {
           {isAddMode ? "Tambah Data Kegiatan" : "Perbarui Data Kegiatan"}
         </DialogTitle>
         <DialogContent>
-          <Select
-            name="id_semester"
-            label="ID Semester"
+          <FormControl
             variant="outlined"
             size="small"
-            value={formData.id_semester || ""}
-            onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
           >
-            {semesters.map((semester) => (
-              <MenuItem key={semester.id_semester} value={semester.id_semester}>
-                {semester.semester} ({semester.tahun_awal} -{" "}
-                {semester.tahun_akhir}) [{" "}
-                {semester.tanggal_awal
-                  ? new Date(semester.tanggal_awal)
-                      .toLocaleString("id-ID", {
-                        timeZone: "Asia/Jakarta",
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })
-                      .replace(/\//g, "/")
-                  : ""}{" "}
-                -{" "}
-                {semester.tanggal_akhir
-                  ? new Date(semester.tanggal_akhir)
-                      .toLocaleString("id-ID", {
-                        timeZone: "Asia/Jakarta",
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })
-                      .replace(/\//g, "/")
-                  : ""}{" "}
-                ]
-              </MenuItem>
-            ))}
-          </Select>
+            <InputLabel id="semester-label">Semester</InputLabel>
+            <Select
+              name="id_semester"
+              labelId="semester-label"
+              label="ID Semester"
+              value={formData.id_semester || ""}
+              onChange={handleFormChange}
+            >
+              {semesters.map((semester) => (
+                <MenuItem
+                  key={semester.id_semester}
+                  value={semester.id_semester}
+                >
+                  {semester.semester} ({semester.tahun_awal} -{" "}
+                  {semester.tahun_akhir}) [{" "}
+                  {semester.tanggal_awal
+                    ? new Date(semester.tanggal_awal)
+                        .toLocaleString("id-ID", {
+                          timeZone: "Asia/Jakarta",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\//g, "/")
+                    : ""}{" "}
+                  -{" "}
+                  {semester.tanggal_akhir
+                    ? new Date(semester.tanggal_akhir)
+                        .toLocaleString("id-ID", {
+                          timeZone: "Asia/Jakarta",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\//g, "/")
+                    : ""}{" "}
+                  ]
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            size="small"
+            fullWidth
+            className={classes.formInput}
+          >
+            <InputLabel id="tingkat-label">Tingkat</InputLabel>
+            <Select
+              name="tingkat"
+              labelId="tingkat-label"
+              label="Tingkat"
+              value={formData.tingkat || ""}
+              onChange={handleFormChange}
+            >
+              <MenuItem value="Nasional">Nasional</MenuItem>
+              <MenuItem value="Internasional">Internasional</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             name="judul_topik"
             label="Judul Topik"
@@ -517,10 +550,16 @@ const Kegiatansekre = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Semester
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Judul Topik
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    Tingkat
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
                     Link Webinar
@@ -547,14 +586,19 @@ const Kegiatansekre = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
+                  dataKegiatan.map((dataKegiatan, index) => (
                     <TableRow key={dataKegiatan.id_kegiatan}>
+                      <TableCell align="center">{index + 1}</TableCell>{" "}
+                      {/* No column */}
                       <TableCell align="right">
                         {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
                         {dataKegiatan.tahun_akhir})
                       </TableCell>
                       <TableCell align="center">
                         {dataKegiatan.judul_topik}
+                      </TableCell>
+                      <TableCell align="center">
+                        {dataKegiatan.tingkat}
                       </TableCell>
                       <TableCell align="center">
                         {dataKegiatan.link_webinar}
@@ -586,6 +630,7 @@ const Kegiatansekre = () => {
                                 dataKegiatan.id_kegiatan,
                                 dataKegiatan.id_semester,
                                 dataKegiatan.judul_topik,
+                                dataKegiatan.tingkat,
                                 dataKegiatan.link_webinar,
                                 dataKegiatan.tanggal_kegiatan
                                   ? new Date(
@@ -639,6 +684,7 @@ const Kegiatansekre = () => {
                                 dataKegiatan.id_kegiatan,
                                 dataKegiatan.id_semester,
                                 dataKegiatan.judul_topik,
+                                dataKegiatan.tingkat,
                                 dataKegiatan.link_webinar,
                                 dataKegiatan.tanggal_kegiatan
                                   ? new Date(dataKegiatan.tanggal_kegiatan)
@@ -674,7 +720,7 @@ const Kegiatansekre = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8}>No data available</TableCell>
+                    <TableCell colSpan={10}>No data available</TableCell>
                   </TableRow>
                 )}
               </TableBody>

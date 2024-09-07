@@ -443,6 +443,9 @@ const Kegiatanben = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Semester
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -463,7 +466,6 @@ const Kegiatanben = () => {
                   <TableCell align="center" className={classes.tableHeader}>
                     Panitia
                   </TableCell>
-
                   <TableCell align="center" className={classes.tableHeader}>
                     Action
                   </TableCell>
@@ -471,48 +473,43 @@ const Kegiatanben = () => {
               </TableHead>
               <TableBody>
                 {dataKegiatan && dataKegiatan.length > 0 ? (
-                  dataKegiatan.map((dataKegiatan) => (
-                    <TableRow key={dataKegiatan.id_kegiatan}>
+                  dataKegiatan.map((item, index) => (
+                    <TableRow key={item.id_kegiatan}>
+                      <TableCell align="center">
+                        {(currentPage - 1) * 5 + (index + 1)}
+                      </TableCell>{" "}
+                      {/* No column */}
                       <TableCell align="right">
-                        {dataKegiatan.semester} ({dataKegiatan.tahun_awal} -{" "}
-                        {dataKegiatan.tahun_akhir})
+                        {item.semester} ({item.tahun_awal} - {item.tahun_akhir})
                       </TableCell>
+                      <TableCell align="center">{item.judul_topik}</TableCell>
+                      <TableCell align="center">{item.link_webinar}</TableCell>
                       <TableCell align="center">
-                        {dataKegiatan.judul_topik}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.link_webinar}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.tanggal_kegiatan
-                          ? new Date(
-                              dataKegiatan.tanggal_kegiatan
-                            ).toLocaleDateString("en-CA")
+                        {item.tanggal_kegiatan
+                          ? new Date(item.tanggal_kegiatan).toLocaleDateString(
+                              "en-CA"
+                            )
                           : ""}
                       </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_mulai}
-                      </TableCell>
-                      <TableCell align="center">
-                        {dataKegiatan.waktu_selesai}
-                      </TableCell>
+                      <TableCell align="center">{item.waktu_mulai}</TableCell>
+                      <TableCell align="center">{item.waktu_selesai}</TableCell>
                       <TableCell align="center">
                         <Tooltip title="Edit">
                           <IconButton
                             color="primary"
                             onClick={() =>
                               handlePanitia(
-                                dataKegiatan.id_kegiatan,
-                                dataKegiatan.id_semester,
-                                dataKegiatan.judul_topik,
-                                dataKegiatan.link_webinar,
-                                dataKegiatan.tanggal_kegiatan
+                                item.id_kegiatan,
+                                item.id_semester,
+                                item.judul_topik,
+                                item.link_webinar,
+                                item.tanggal_kegiatan
                                   ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
+                                      item.tanggal_kegiatan
                                     ).toLocaleDateString("en-CA")
                                   : "",
-                                dataKegiatan.waktu_mulai,
-                                dataKegiatan.waktu_selesai
+                                item.waktu_mulai,
+                                item.waktu_selesai
                               )
                             }
                           >
@@ -520,24 +517,23 @@ const Kegiatanben = () => {
                           </IconButton>
                         </Tooltip>
                       </TableCell>
-
                       <TableCell align="center">
                         <Tooltip title="Edit">
                           <IconButton
                             color="primary"
                             onClick={() =>
                               handleUpdate(
-                                dataKegiatan.id_kegiatan,
-                                dataKegiatan.id_semester,
-                                dataKegiatan.judul_topik,
-                                dataKegiatan.link_webinar,
-                                dataKegiatan.tanggal_kegiatan
+                                item.id_kegiatan,
+                                item.id_semester,
+                                item.judul_topik,
+                                item.link_webinar,
+                                item.tanggal_kegiatan
                                   ? new Date(
-                                      dataKegiatan.tanggal_kegiatan
+                                      item.tanggal_kegiatan
                                     ).toLocaleDateString("en-CA")
                                   : "",
-                                dataKegiatan.waktu_mulai,
-                                dataKegiatan.waktu_selesai
+                                item.waktu_mulai,
+                                item.waktu_selesai
                               )
                             }
                           >
@@ -547,9 +543,7 @@ const Kegiatanben = () => {
                         <Tooltip title="Delete">
                           <IconButton
                             color="error"
-                            onClick={() =>
-                              handleDelete(dataKegiatan.id_kegiatan)
-                            }
+                            onClick={() => handleDelete(item.id_kegiatan)}
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -559,7 +553,7 @@ const Kegiatanben = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8}>No data available</TableCell>
+                    <TableCell colSpan={9}>No data available</TableCell>
                   </TableRow>
                 )}
               </TableBody>

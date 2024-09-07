@@ -245,6 +245,9 @@ const Role = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Nama Role
                   </TableCell>
@@ -254,8 +257,12 @@ const Role = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {roles.map((role) => (
+                {roles.map((role, index) => (
                   <TableRow key={role.id_role} className={classes.tableRow}>
+                    <TableCell align="center">
+                      {(currentPage - 1) * 5 + (index + 1)}
+                    </TableCell>{" "}
+                    {/* No column */}
                     <TableCell>{role.nm_role}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">

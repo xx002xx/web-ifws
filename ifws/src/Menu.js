@@ -224,7 +224,6 @@ const Menu = () => {
               Data Menu
             </Typography>
             <Box className={classes.searchField}>
-              {" "}
               {/* Menggunakan Box untuk memastikan TextField berada dalam satu baris */}
               <TextField
                 label="Cari Menu"
@@ -238,6 +237,9 @@ const Menu = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Nama Menu
                   </TableCell>
@@ -250,8 +252,12 @@ const Menu = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {menus.map((menu) => (
+                {menus.map((menu, index) => (
                   <TableRow key={menu.id_menu} className={classes.tableRow}>
+                    <TableCell align="center">
+                      {(currentPage - 1) * 5 + (index + 1)}
+                    </TableCell>{" "}
+                    {/* No column */}
                     <TableCell>{menu.nm_menu}</TableCell>
                     <TableCell>{menu.url_menu}</TableCell>
                     <TableCell align="center">
