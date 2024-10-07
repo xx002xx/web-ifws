@@ -23,6 +23,7 @@ import {
   DialogActions,
   Select,
   MenuItem,
+  InputLabel
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
@@ -310,6 +311,8 @@ const Akun = () => {
             fullWidth
             className={classes.formInput} // Apply form input styling
           />
+            <InputLabel id="role-label">Role</InputLabel>
+
           <Select
             name="id_role"
             label="ID Role"

@@ -609,9 +609,11 @@ const Pesertatugasakhir = () => {
                   <TableCell align="center" className={classes.tableHeader}>
                     Status Peserta
                   </TableCell>
-                  <TableCell align="center" className={classes.tableHeader}>
-                    Action
-                  </TableCell>
+                  {localStorage.getItem("nm_role") == "Koordinator TA" &&(
+                      <TableCell align="center" className={classes.tableHeader}>
+                        Action
+                      </TableCell>
+                    )}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -628,6 +630,7 @@ const Pesertatugasakhir = () => {
                     <TableCell align="center">
                       {panitia.status_peserta}
                     </TableCell>
+                    {localStorage.getItem("nm_role") == "Koordinator TA" &&(
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton
@@ -638,6 +641,7 @@ const Pesertatugasakhir = () => {
                         </IconButton>
                       </Tooltip>
                     </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

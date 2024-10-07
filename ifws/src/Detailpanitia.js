@@ -446,8 +446,17 @@ const Detailpanitia = () => {
                     {dataKegiatan.link_webinar}
                   </TableCell>
                   <TableCell align="center">
-                    {dataKegiatan.tanggal_kegiatan}
-                  </TableCell>
+                        {dataKegiatan.tanggal_kegiatan
+                          ? new Date(dataKegiatan.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                   <TableCell align="center">
                     {dataKegiatan.waktu_mulai}
                   </TableCell>

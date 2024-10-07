@@ -91,6 +91,7 @@ const Detailpanitiaben = () => {
   const [formData, setFormData] = useState({
     id_kegiatan: "",
     id_panitia: "",
+    tanggal_bayar: "",
   });
   const [isAddMode, setIsAddMode] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -228,6 +229,7 @@ const Detailpanitiaben = () => {
     setFormData({
       id_detail_panitia: panitia.id_detail_panitia,
       rate_panitia: panitia.rate_panitia,
+      tanggal_bayar: panitia.tanggal_bayar,
     });
     setOpenModalRate(true);
   };
@@ -435,20 +437,40 @@ const Detailpanitiaben = () => {
       <Dialog open={openModalRate} onClose={handleCloseModalRate}>
         <DialogTitle>{isAddMode ? "Tambah Rate" : "Perbarui Rate"}</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Rate Panitia"
-            variant="outlined"
-            value={formData.rate_panitia}
-            onChange={handleFormChange}
-            name="rate_panitia"
-            type="text"
-            autoFocus // Menambahkan autoFocus agar tidak perlu klik terlebih dahulu
-            InputProps={{
-              inputComponent: NumberFormatCustom, // Komponen untuk format angka
-            }}
-            fullWidth
-          />
-        </DialogContent>
+  <Box mb={2}>
+    <TextField
+      label="Rate Panitia"
+      variant="outlined"
+      value={formData.rate_panitia}
+      onChange={handleFormChange}
+      name="rate_panitia"
+      type="text"
+      size="small"
+      autoFocus
+      InputProps={{
+        inputComponent: NumberFormatCustom,
+      }}
+      fullWidth
+    />
+  </Box>
+  <Box mb={2}>
+    <TextField
+      name="tanggal_bayar"
+      label="Tanggal Bayar"
+      variant="outlined"
+      size="small"
+      type="date"
+      value={
+        formData.tanggal_bayar
+          ? new Date(formData.tanggal_bayar).toLocaleDateString("en-CA")
+          : ""
+      }
+      onChange={handleFormChange}
+      fullWidth
+    />
+  </Box>
+</DialogContent>
+
         <DialogActions>
           <Button
             onClick={handleUpdateSubmitRate}
@@ -549,8 +571,17 @@ const Detailpanitiaben = () => {
                     {dataKegiatan.link_webinar}
                   </TableCell>
                   <TableCell align="center">
-                    {dataKegiatan.tanggal_kegiatan}
-                  </TableCell>
+                        {dataKegiatan.tanggal_kegiatan
+                          ? new Date(dataKegiatan.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                   <TableCell align="center">
                     {dataKegiatan.waktu_mulai}
                   </TableCell>
@@ -586,6 +617,9 @@ const Detailpanitiaben = () => {
                     Rate Panitia
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
+                    Tanggal Bayar
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Action
                   </TableCell>
                 </TableRow>
@@ -605,6 +639,18 @@ const Detailpanitiaben = () => {
                         ? item.rate_panitia.toLocaleString("id-ID")
                         : "0"}
                     </TableCell>
+                    <TableCell align="center">
+                        {item.tanggal_bayar
+                          ? new Date(item.tanggal_bayar)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton
@@ -654,6 +700,9 @@ const Detailpanitiaben = () => {
                     Rate Panitia
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
+                    Tanggal Bayar
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Action
                   </TableCell>
                 </TableRow>
@@ -673,6 +722,18 @@ const Detailpanitiaben = () => {
                         ? item.rate_panitia.toLocaleString()
                         : "0"}
                     </TableCell>
+                    <TableCell align="center">
+                        {item.tanggal_bayar
+                          ? new Date(item.tanggal_bayar)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Delete">
                         <IconButton

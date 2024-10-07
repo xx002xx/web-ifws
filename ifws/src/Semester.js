@@ -424,19 +424,30 @@ const Semester = () => {
                     <TableCell align="right">{item.tahun_akhir}</TableCell>
                     <TableCell align="center">{item.semester}</TableCell>
                     <TableCell align="center">
-                      {item.tanggal_awal
-                        ? new Date(item.tanggal_awal).toLocaleDateString(
-                            "en-CA"
-                          )
-                        : ""}
-                    </TableCell>
+                        {item.tanggal_awal
+                          ? new Date(item.tanggal_awal)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
+                    
                     <TableCell align="center">
-                      {item.tanggal_akhir
-                        ? new Date(item.tanggal_akhir).toLocaleDateString(
-                            "en-CA"
-                          )
-                        : ""}
-                    </TableCell>
+                        {item.tanggal_akhir
+                          ? new Date(item.tanggal_akhir)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Edit">
                         <IconButton

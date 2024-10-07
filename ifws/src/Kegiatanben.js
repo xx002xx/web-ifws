@@ -24,6 +24,8 @@ import {
   DialogActions,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
@@ -92,6 +94,7 @@ const Kegiatanben = () => {
   const [formData, setFormData] = useState({
     id_semester: "",
     judul_topik: "",
+    tingkat: "",
     link_webinar: "",
     tanggal_kegiatan: "",
     waktu_mulai: "",
@@ -199,6 +202,7 @@ const Kegiatanben = () => {
     id_kegiatan,
     id_semester,
     judul_topik,
+    tingkat,
     link_webinar,
     tanggal_kegiatan,
     waktu_mulai,
@@ -222,6 +226,7 @@ const Kegiatanben = () => {
     id_kegiatan,
     id_semester,
     judul_topik,
+    tingkat,
     link_webinar,
     tanggal_kegiatan,
     waktu_mulai,
@@ -231,6 +236,7 @@ const Kegiatanben = () => {
       id_kegiatan,
       id_semester,
       judul_topik,
+      tingkat,
       link_webinar,
       tanggal_kegiatan,
       waktu_mulai,
@@ -311,23 +317,72 @@ const Kegiatanben = () => {
           {isAddMode ? "Tambah Data Kegiatan" : "Perbarui Data Kegiatan"}
         </DialogTitle>
         <DialogContent>
-          <Select
-            name="id_semester"
-            label="ID Semester"
+        <FormControl
             variant="outlined"
             size="small"
-            value={formData.id_semester}
-            onChange={handleFormChange}
             fullWidth
             className={classes.formInput}
           >
-            {semesters.map((semester) => (
-              <MenuItem key={semester.id_semester} value={semester.id_semester}>
-                {semester.semester} ({semester.tahun_awal} -{" "}
-                {semester.tahun_akhir})
-              </MenuItem>
-            ))}
-          </Select>
+            <InputLabel id="semester-label">Semester</InputLabel>
+            <Select
+              name="id_semester"
+              labelId="semester-label"
+              label="ID Semester"
+              value={formData.id_semester || ""}
+              onChange={handleFormChange}
+            >
+              {semesters.map((semester) => (
+                <MenuItem
+                  key={semester.id_semester}
+                  value={semester.id_semester}
+                >
+                  {semester.semester} ({semester.tahun_awal} -{" "}
+                  {semester.tahun_akhir}) [{" "}
+                  {semester.tanggal_awal
+                    ? new Date(semester.tanggal_awal)
+                        .toLocaleString("id-ID", {
+                          timeZone: "Asia/Jakarta",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\//g, "/")
+                    : ""}{" "}
+                  -{" "}
+                  {semester.tanggal_akhir
+                    ? new Date(semester.tanggal_akhir)
+                        .toLocaleString("id-ID", {
+                          timeZone: "Asia/Jakarta",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\//g, "/")
+                    : ""}{" "}
+                  ]
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            size="small"
+            fullWidth
+            className={classes.formInput}
+          >
+            <InputLabel id="tingkat-label">Tingkat</InputLabel>
+            <Select
+              name="tingkat"
+              labelId="tingkat-label"
+              label="Tingkat"
+              value={formData.tingkat || ""}
+              onChange={handleFormChange}
+            >
+              <MenuItem value="Nasional">Nasional</MenuItem>
+              <MenuItem value="Internasional">Internasional</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             name="judul_topik"
             label="Judul Topik"
@@ -452,6 +507,9 @@ const Kegiatanben = () => {
                     Judul Topik
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
+                    Tingkat
+                  </TableCell>
+                  <TableCell align="center" className={classes.tableHeader}>
                     Link Webinar
                   </TableCell>
                   <TableCell align="center" className={classes.tableHeader}>
@@ -483,12 +541,20 @@ const Kegiatanben = () => {
                         {item.semester} ({item.tahun_awal} - {item.tahun_akhir})
                       </TableCell>
                       <TableCell align="center">{item.judul_topik}</TableCell>
+                      <TableCell align="center">
+                        {item.tingkat}
+                      </TableCell>
                       <TableCell align="center">{item.link_webinar}</TableCell>
                       <TableCell align="center">
                         {item.tanggal_kegiatan
-                          ? new Date(item.tanggal_kegiatan).toLocaleDateString(
-                              "en-CA"
-                            )
+                          ? new Date(item.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
                           : ""}
                       </TableCell>
                       <TableCell align="center">{item.waktu_mulai}</TableCell>
@@ -502,6 +568,7 @@ const Kegiatanben = () => {
                                 item.id_kegiatan,
                                 item.id_semester,
                                 item.judul_topik,
+                                item.tingkat,
                                 item.link_webinar,
                                 item.tanggal_kegiatan
                                   ? new Date(
@@ -526,6 +593,7 @@ const Kegiatanben = () => {
                                 item.id_kegiatan,
                                 item.id_semester,
                                 item.judul_topik,
+                                item.tingkat,
                                 item.link_webinar,
                                 item.tanggal_kegiatan
                                   ? new Date(

@@ -628,6 +628,9 @@ const Laporankegiatan = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                <TableCell align="center" className={classes.tableHeader}>
+                    No
+                  </TableCell>
                   <TableCell className={classes.tableHeader}>
                     Judul Topik
                   </TableCell>
@@ -646,19 +649,26 @@ const Laporankegiatan = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {panitia.map((panitia) => (
+              {panitia.map((panitia, index) => (
                   <TableRow
                     key={panitia.id_kegiatan}
                     className={classes.tableRow}
                   >
+                     <TableCell align="center">{index + 1}</TableCell>
                     <TableCell>{panitia.judul_topik}</TableCell>
                     <TableCell align="center">{panitia.link_webinar}</TableCell>
                     <TableCell align="center">
-                      {new Date(panitia.tanggal_kegiatan).toLocaleString(
-                        "id-ID",
-                        { timeZone: "Asia/Jakarta" }
-                      )}
-                    </TableCell>
+                        {panitia.tanggal_kegiatan
+                          ? new Date(panitia.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
+                          : ""}
+                      </TableCell>
                     <TableCell align="center">{panitia.waktu_mulai}</TableCell>
                     <TableCell align="center">
                       {panitia.waktu_selesai}

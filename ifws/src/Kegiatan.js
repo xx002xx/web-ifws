@@ -500,9 +500,14 @@ const Kegiatan = () => {
                       <TableCell align="center">{item.link_webinar}</TableCell>
                       <TableCell align="center">
                         {item.tanggal_kegiatan
-                          ? new Date(item.tanggal_kegiatan).toLocaleDateString(
-                              "en-CA"
-                            )
+                          ? new Date(item.tanggal_kegiatan)
+                              .toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\//g, "/")
                           : ""}
                       </TableCell>
                       <TableCell align="center">{item.waktu_mulai}</TableCell>

@@ -338,11 +338,24 @@ const Kegiatansekre = () => {
           (dataKegiatan) => dataKegiatan.id_kegiatan !== id_kegiatan
         );
         setDataKegiatan(updatedDataKegiatan);
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Data kegiatan has been deleted successfully!",
-        });
+        fetchData();
+        const data = await response.json();
+        console.log(data);
+        if (data.success == "false") {
+          Swal.fire({
+            icon: 'error', // You can choose the icon type, e.g., 'error', 'warning', 'info', 'success'
+            title: 'Oops...',
+            text: 'Kegiatan tidak dapat dihapus karena sudah digunakan/selesai',
+          });
+        } else {
+          console.log(data); // Do something with the JSON data if deletion is successful
+          // Optionally display a success message
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Kegiatan deleted successfully.',
+          });
+        }
       } else {
         console.error("Failed to delete data kegiatan");
       }
